@@ -1,0 +1,27 @@
+{
+  "name": "last-ball-standing",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "node server/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/alyshukry/last-ball-standing.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "bugs": {
+    "url": "https://github.com/alyshukry/last-ball-standing/issues"
+  },
+  "homepage": "https://github.com/alyshukry/last-ball-standing#readme",
+  "dependencies": {
+    "express": "^5.2.1",
+    "matter-js": "^0.20.0",
+    "ws": "^8.21.0"
+  }
+}
