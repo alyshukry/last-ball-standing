@@ -76,7 +76,7 @@ function render() {
         const y = prev ? prev.y + (player.y - prev.y) * t : player.y
 
         ctx.beginPath()
-        ctx.arc(x, y, 30, 0, Math.PI * 2)
+        ctx.arc(x, y, 20, 0, Math.PI * 2)
         ctx.fillStyle = playersInfo[id]?.color ?? 'black'
         ctx.fill()
     }
