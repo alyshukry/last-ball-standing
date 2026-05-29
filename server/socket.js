@@ -12,8 +12,18 @@ export const initSocket = (server) => {
     let empty = true
     wss.on('connection', (ws) => {
         ws.id = randomUUID()
+        ws.color = `rgb(${Math.random() * 255}, ${Math.random() * 255}, ${Math.random() * 255})`
         console.log('user connected with id ' + ws.id)
         players.set(ws.id, { x: 400, y: 300, vx: 0, vy: 0 })
+
+        for (const client of wss.clients) {
+            send(client, { type: 'player_info', id: ws.id, color: ws.color })
+        }
+
+        for (const client of wss.clients) {
+            if (client.id !== ws.id)
+                send(ws, { type: 'player_info', id: client.id, color: client.color })
+        }
 
         if (empty) startLoop(wss)
         empty = false

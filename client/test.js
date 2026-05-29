@@ -40,19 +40,29 @@ window.addEventListener('keyup', (event) => {
 
 const canvas = document.getElementById('main')
 const ctx = canvas.getContext('2d')
-ctx.fillStyle = `rgb(${Math.random() * 255}, ${Math.random() * 255}, ${Math.random() * 255})`
 
 let prevState = {}
 let currentState = {}
+let playersInfo = {}
 let lastUpdate = Date.now()
 
 ws.onopen = () => console.log('yo')
 ws.onclose = () => console.log('bye')
 ws.onmessage = (e) => {
-    prevState = currentState
-    currentState = JSON.parse(e.data)
-    lastUpdate = Date.now()
-    t = 0
+    const parsed = JSON.parse(e.data)
+
+    switch (parsed.type) {
+        case 'state': {
+            prevState = currentState
+            currentState = parsed
+            lastUpdate = Date.now()
+            t = 0
+        }; break
+        case 'player_info': {
+            playersInfo[parsed.id] = { color: parsed.color }
+        }; break
+    }
+
 }
 
 function render() {
@@ -66,7 +76,8 @@ function render() {
         const y = prev ? prev.y + (player.y - prev.y) * t : player.y
 
         ctx.beginPath()
-        ctx.arc(x, y, 10, 0, Math.PI * 2)
+        ctx.arc(x, y, 30, 0, Math.PI * 2)
+        ctx.fillStyle = playersInfo[id]?.color ?? 'black'
         ctx.fill()
     }
 
