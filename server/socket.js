@@ -14,7 +14,7 @@ export const initSocket = (server) => {
     let empty = true
     wss.on('connection', (ws) => {
         ws.id = randomUUID()
-        ws.color = `rgb(${Math.random() * 255}, ${Math.random() * 255}, ${Math.random() * 255})`
+        ws.color = ['red', 'orange', 'yellow'][Math.floor(Math.random() * 3)]
         addPlayer(
             ws.id,
             Math.floor(Math.random() * 1000),

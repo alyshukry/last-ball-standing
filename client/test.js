@@ -1,4 +1,6 @@
-const ws = new WebSocket('ws://localhost:8000')
+import { BALL_RADIUS } from '../server/game/constants.js'
+
+const ws = new WebSocket('ws://192.168.1.44:8000')
 
 const keyMap = {
     w: { type: 'input', x: 0, y: -1 },
@@ -110,7 +112,7 @@ function render() {
         const y = prev ? prev.y + (player.y - prev.y) * t : player.y
 
         ctx.beginPath()
-        ctx.arc(x, y, 20, 0, Math.PI * 2)
+        ctx.arc(x, y, BALL_RADIUS, 0, Math.PI * 2)
         ctx.fillStyle = playersInfo[id]?.color ?? 'black'
         ctx.fill()
     }

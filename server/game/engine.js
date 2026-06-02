@@ -1,4 +1,5 @@
-import { players, bodies } from './state.js'
+import { BALL_RADIUS } from './constants.js'
+import { players, bodies, round } from './state.js'
 import Matter from 'matter-js'
 
 const { Engine, World, Bodies, Body, Events } = Matter
@@ -45,14 +46,23 @@ Events.on(engine, 'collisionEnd', (e) => {
 })
 
 export const addPlayer = (id, x, y, color, username) => {
-    const ball = Bodies.circle(x, y, 20, { restitution: 1, frictionAir: 0.0005 })
+    const ball = Bodies.circle(x, y, BALL_RADIUS, { restitution: 1, frictionAir: 0.0005, friction: 0 })
+    ball.player = id
     World.add(engine.world, ball)
 
-    players.set(id, { x: x, y: y, vx: 0, vy: 0, color: color, username: username, ball: ball })
+    players.set(id, {
+        x: x,
+        y: y,
+        vx: 0,
+        vy: 0,
+        color: color,
+        username: username,
+        ball: ball,
+    })
 }
 
 export const removePlayer = (id) => {
-    if (players.get(id).ball) 
+    if (players.get(id).ball)
         World.remove(engine.world, players.get(id).ball)
 
     players.delete(id)
