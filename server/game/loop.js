@@ -21,5 +21,5 @@ export const startLoop = (wss) => {
                 send(client, state)
             }
         }
-    }, 1000 / 20)
+    }, 1000 / 30)
 }

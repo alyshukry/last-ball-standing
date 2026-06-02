@@ -4,9 +4,9 @@ import Matter from 'matter-js'
 const { Engine, World, Bodies, Body, Events } = Matter
 
 export const engine = Engine.create()
-engine.gravity.y = 1
+engine.gravity.y = 1.25
 
-const floor = Bodies.rectangle(500, 500, 1000, 20, { isStatic: true, restitution: 1 })
+const floor = Bodies.rectangle(500, 500, 1000, 20, { isStatic: true, restitution: 0.99 })
 World.add(engine.world, floor)
 
 const grounded = new Set()

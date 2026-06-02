@@ -9,7 +9,7 @@ const keyMap = {
 
 const keysPressed = new Set()
 
-function sendInput() {
+setInterval(() => {
     let x = 0, y = 0
 
     if (keysPressed.has('w')) y -= 1
@@ -22,20 +22,18 @@ function sendInput() {
             ws.send(JSON.stringify({ type: 'input', x, y }))
         }
     }
-}
+}, 1000 / 30)
 
 window.addEventListener('keydown', (event) => {
     const key = event.key.toLowerCase()
     if (keyMap[key]) {
         keysPressed.add(key)
-        sendInput()
     }
 })
 
 window.addEventListener('keyup', (event) => {
     const key = event.key.toLowerCase()
     keysPressed.delete(key)
-    sendInput()
 })
 
 const canvas = document.getElementById('main')
@@ -45,6 +43,7 @@ let prevState = {}
 let currentState = {}
 let playersInfo = {}
 let lastUpdate = Date.now()
+let t = 0
 
 ws.onopen = () => console.log('yo')
 ws.onclose = () => console.log('bye')
@@ -56,7 +55,6 @@ ws.onmessage = (e) => {
             prevState = currentState
             currentState = parsed
             lastUpdate = Date.now()
-            t = 0
         }; break
         case 'player_info': {
             playersInfo[parsed.id] = { color: parsed.color }
@@ -66,7 +64,7 @@ ws.onmessage = (e) => {
 }
 
 function render() {
-    t = (Date.now() - lastUpdate) / (1000 / 20) // server tickrate
+    t = Math.min((Date.now() - lastUpdate) / (1000 / 30), 1) // server tickrate
 
     ctx.clearRect(0, 0, canvas.width, canvas.height)
 
