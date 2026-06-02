@@ -4,20 +4,20 @@ import { handleInput } from './handlers/input.js'
 import { handleJoin } from './handlers/join.js'
 import { randomUUID } from 'crypto'
 import { startLoop } from './game/loop.js'
-import { players } from './game/state.js'
-import { addPlayer, removePlayer } from './game/physics.js'
+import { bodies, players } from './game/state.js'
+import { addPlayer, buildArena, removePlayer } from './game/engine.js'
 
 export const initSocket = (server) => {
     const wss = new WebSocketServer({ server })
+    buildArena()
 
     let empty = true
     wss.on('connection', (ws) => {
         ws.id = randomUUID()
         ws.color = `rgb(${Math.random() * 255}, ${Math.random() * 255}, ${Math.random() * 255})`
         console.log('user connected with id ' + ws.id)
-        const test = Math.floor(Math.random() * 400)
-        players.set(ws.id, { x: test, y: 300, vx: 0, vy: 0 })
-        addPlayer(ws.id, Math.floor(Math.random() * 400), 300)
+
+        addPlayer(ws.id, Math.floor(Math.random() * 1000), 300)
 
         for (const client of wss.clients) {
             send(client, { type: 'player_info', id: ws.id, color: ws.color })
@@ -27,6 +27,8 @@ export const initSocket = (server) => {
             if (client.id !== ws.id)
                 send(ws, { type: 'player_info', id: client.id, color: client.color })
         }
+
+        send(ws, { type: 'arena', bodies: bodies })
 
         if (empty) startLoop(wss)
         empty = false
