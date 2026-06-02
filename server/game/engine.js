@@ -7,7 +7,6 @@ export const engine = Engine.create()
 engine.gravity.y = 1.25
 
 export const buildArena = () => {
-    console.log('Arena built successfully.')
     for (const body of bodies) {
         switch (body.shape) {
             case 'rect':
@@ -45,29 +44,22 @@ Events.on(engine, 'collisionEnd', (e) => {
     }
 })
 
-export const balls = new Map()
-
-export const addPlayer = (id, x, y) => {
+export const addPlayer = (id, x, y, color, username) => {
     const ball = Bodies.circle(x, y, 20, { restitution: 1, frictionAir: 0.0005 })
-    ball.player = id
-    balls.set(id, ball)
     World.add(engine.world, ball)
 
-    players.set(id, { x: x, y: y, vx: 0, vy: 0 })
+    players.set(id, { x: x, y: y, vx: 0, vy: 0, color: color, username: username, ball: ball })
 }
 
 export const removePlayer = (id) => {
-    const ball = balls.get(id)
-    if (ball) {
-        World.remove(engine.world, ball)
-        balls.delete(id)
-    }
+    if (players.get(id).ball) 
+        World.remove(engine.world, players.get(id).ball)
 
     players.delete(id)
 }
 
 export const applyInput = (id, x, y) => {
-    const ball = balls.get(id)
+    const ball = players.get(id).ball
     if (!ball) return
     if (x === 0 && y === 0) return
 
