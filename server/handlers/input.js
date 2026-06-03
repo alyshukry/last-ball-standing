@@ -1,4 +1,4 @@
-import { applyInput } from "../game/engine.js"
+import { applyInput } from "../game/world.js"
 
 export const handleInput = (ws, data) => {
     applyInput(ws.id, data.x, data.y)

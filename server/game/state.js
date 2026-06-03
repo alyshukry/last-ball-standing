@@ -4,7 +4,8 @@ export const bodies = [
     { shape: 'rect', x: 500, y: 100, width: 500, height: 20, options: { angle: Math.PI / 4, isStatic: 1, restitution: .99 }, color: 'rgb(255, 0, 0)' }
 ]
 export const round = {
-    status: '',
+    number: 0,
+    status: 'LOBBY', // 'LOBBY' | 'PLAYING' | 'RESULT'
     winner: null,
     wins: new Map()
 }

@@ -4,11 +4,14 @@ import { handleInput } from './handlers/input.js'
 import { handleJoin } from './handlers/join.js'
 import { randomUUID } from 'crypto'
 import { startLoop } from './game/loop.js'
-import { bodies } from './game/state.js'
-import { addPlayer, buildArena, removePlayer } from './game/engine.js'
+import { bodies, players, round } from './game/state.js'
+import { addPlayer, buildArena, removePlayer } from './game/world.js'
+import { checkRound, startRound } from './game/round.js'
 
+let wss
+let lobbyTimeout = null
 export const initSocket = (server) => {
-    const wss = new WebSocketServer({ server })
+    wss = new WebSocketServer({ server })
     buildArena()
 
     let empty = true
@@ -29,7 +32,10 @@ export const initSocket = (server) => {
             if (client.id !== ws.id) send(ws, { type: 'player_info', id: client.id, color: client.color })
         send(ws, { type: 'arena', bodies: bodies })
 
-        if (empty) startLoop(wss)
+        if (round.status === 'LOBBY' && players.size === 2)
+            lobbyTimeout = setTimeout(() => { startRound() }, 5000)
+
+        if (empty) startLoop()
         empty = false
 
         ws.on('message', (data) => {
@@ -43,11 +49,22 @@ export const initSocket = (server) => {
 
         ws.on('close', () => {
             removePlayer(ws.id)
+
+            if (players.size >= 1 && lobbyTimeout) {
+                clearTimeout(lobbyTimeout)
+                lobbyTimeout = null
+
+                return
+            }
+            checkRound()
         })
     })
 
     wss.on('close', () => {
     })
+}
 
+export const getSocketServer = () => {
+    if (!wss) throw new Error('wss not initialized')
     return wss
 }

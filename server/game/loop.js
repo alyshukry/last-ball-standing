@@ -1,10 +1,13 @@
-import { update } from './engine.js'
-import { players } from './state.js'
+import { update } from './world.js'
+import { players, round } from './state.js'
 import { send } from '../utils/socket.js'
+import { BALL_RADIUS, WORLD_HEIGHT } from './constants.js'
+import { killOutOfBounds, startRound } from './round.js'
+import { getSocketServer } from '../socket.js'
 
 let tick = 0
 
-export const startLoop = (wss) => {
+export const startLoop = () => {
     const payload = {
         type: 'state',
         players: {}
@@ -15,19 +18,23 @@ export const startLoop = (wss) => {
         tick++
 
         for (const [id, player] of players) {
-            payload.players[id] = {
-                x: Math.round(player.ball.position.x),
-                y: Math.round(player.ball.position.y)
+            if (!player.dead) {
+                killOutOfBounds(id)
+
+                payload.players[id] = {
+                    x: Math.round(player.ball.position.x),
+                    y: Math.round(player.ball.position.y)
+                }
             }
         }
     }, 1000 / 60)
 
     setInterval(() => {
-        // cleanup disconnected players
+        // cleanup disconnected and dead players
         for (const id in payload.players)
-            if (!players.has(id)) delete payload.players[id]
+            if (!players.has(id) || players.get(id).dead) delete payload.players[id]
 
-        for (const client of wss.clients) {
+        for (const client of getSocketServer().clients) {
             if (client.readyState === 1) {
                 send(client, payload)
             }

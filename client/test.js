@@ -65,6 +65,9 @@ ws.onmessage = (e) => {
         case 'arena': {
             arena = parsed.bodies
         }; break
+        case 'round_end': {
+            console.log(parsed.winner + ' wins')
+        }; break
     }
 
 }

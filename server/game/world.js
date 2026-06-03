@@ -51,13 +51,11 @@ export const addPlayer = (id, x, y, color, username) => {
     World.add(engine.world, ball)
 
     players.set(id, {
-        x: x,
-        y: y,
-        vx: 0,
-        vy: 0,
+        id: id,
         color: color,
         username: username,
         ball: ball,
+        dead: true
     })
 }
 
@@ -66,6 +64,25 @@ export const removePlayer = (id) => {
         World.remove(engine.world, players.get(id).ball)
 
     players.delete(id)
+}
+
+export const killPlayer = (id) => {
+    const player = players.get(id)
+
+    player.dead = true
+
+    Body.setStatic(player.ball, true)
+    Body.setPosition(player.ball, { x: -1000, y: -1000 })
+}
+
+export const revivePlayer = (id) => {
+    const player = players.get(id)
+
+    Body.setVelocity(player.ball, { x: 0, y: 0 })
+    Body.setPosition(player.ball, { x: Math.floor(Math.random() * 1000), y: 100 })
+    Body.setStatic(player.ball, false)
+
+    player.dead = false
 }
 
 export const applyInput = (id, x, y) => {
