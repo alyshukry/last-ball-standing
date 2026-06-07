@@ -70,8 +70,7 @@ export const applyInput = (room, id, x, y) => {
 
     Body.applyForce(ball, ball.position, {
         x: x * 0.00125,
-        // y: y < 0 && grounded.has(id) && Math.abs(ball.velocity.y) < 2.5 ? -0.05 : y * 0.001
-        y: y * 0.001
+        y: y < 0 && room.grounded.has(id) && Math.abs(ball.velocity.y) < 2.5 ? -0.05 : y * 0.001
     })
 }
 

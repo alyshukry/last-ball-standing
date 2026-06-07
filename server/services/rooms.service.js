@@ -11,6 +11,7 @@ const rooms = new Map()
 export const createRoom = ({ name, password, arenas }) => {
     const token = randomInt(10).toString() // creator sends to server to verify room ownership on ws connection
     const engine = Engine.create()
+    const grounded = new Set()
 
     const room = {
         id: randomInt(10).toString(),
@@ -22,11 +23,11 @@ export const createRoom = ({ name, password, arenas }) => {
         players: new Map(),
         round: { status: 'LOBBY', number: 0, winner: null, wins: new Map() },
         lobbyTimeout: null,
-        engine
+        engine,
+        grounded
     }
     rooms.set(room.id, room)
 
-    const grounded = new Set()
     Events.on(engine, 'collisionStart', (e) => {
         for (const pair of e.pairs) {
             const { bodyA, bodyB, collision } = pair
