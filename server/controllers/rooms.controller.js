@@ -1,9 +1,9 @@
 import { createRoom, getRooms, getRoom, deleteRoom } from "../services/rooms.service.js"
 
 export const handleCreateRoom = (req, res) => {
-    const { name, password, owner, arenas } = req.body
+    const { name, password, arenas } = req.body
 
-    res.status(201).json(createRoom({ name, password, owner, arenas }))
+    res.status(201).json(createRoom({ name, password, arenas }))
 }
 
 export const handleGetRooms = (req, res) => {
@@ -17,7 +17,8 @@ export const handleGetRoom = (req, res) => {
 }
 
 export const handleDeleteRoom = (req, res) => {
-    const room = deleteRoom(req.params.id)
-    if (!room) return res.status(404).json({ error: 'room not found' })
-    res.status(204).json()
+    const exists = getRoom(req.params.id)
+    if (!exists) return res.status(404).json({ error: 'room not found' })
+    deleteRoom(req.params.id)
+    res.status(204).send()
 }

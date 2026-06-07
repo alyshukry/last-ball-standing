@@ -1,6 +1,45 @@
 import { BALL_RADIUS } from '../server/game/constants.js'
 
+const params = new URLSearchParams(window.location.search)
+const roomId = params.get('roomId')
+const token = params.get('token')
+const password = params.get('password') // player enters password before joining
+
 const ws = new WebSocket('ws://192.168.1.44:8000')
+
+ws.onopen = () => {
+    ws.send(JSON.stringify({
+        type: 'join_room',
+        room: roomId,
+        token: token || null,
+        password: password || null,
+        color: 'rgb(255,0,0)',
+        username: 'yoyo'
+    }))
+}
+
+ws.onclose = () => console.log('bye')
+ws.onmessage = (e) => {
+    const parsed = JSON.parse(e.data)
+
+    switch (parsed.type) {
+        case 'state': {
+            prevState = currentState
+            currentState = parsed
+            lastUpdate = Date.now()
+        }; break
+        case 'player_info': {
+            playersInfo[parsed.id] = { color: parsed.color }
+        }; break
+        case 'arena': {
+            arena = parsed.bodies
+        }; break
+        case 'round_end': {
+            console.log(parsed.winner + ' wins')
+        }; break
+    }
+
+}
 
 const keyMap = {
     w: { type: 'input', x: 0, y: -1 },
@@ -47,30 +86,6 @@ let playersInfo = {}
 let lastUpdate = Date.now()
 let t = 0
 let arena = []
-
-ws.onopen = () => console.log('yo')
-ws.onclose = () => console.log('bye')
-ws.onmessage = (e) => {
-    const parsed = JSON.parse(e.data)
-
-    switch (parsed.type) {
-        case 'state': {
-            prevState = currentState
-            currentState = parsed
-            lastUpdate = Date.now()
-        }; break
-        case 'player_info': {
-            playersInfo[parsed.id] = { color: parsed.color }
-        }; break
-        case 'arena': {
-            arena = parsed.bodies
-        }; break
-        case 'round_end': {
-            console.log(parsed.winner + ' wins')
-        }; break
-    }
-
-}
 
 function renderBody(body) {
     ctx.save()

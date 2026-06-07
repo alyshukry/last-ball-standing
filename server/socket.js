@@ -7,11 +7,11 @@ import { startLoop } from './game/loop.js'
 import { bodies, players, round } from './game/state.js'
 import { addPlayer, buildArena, removePlayer } from './game/world.js'
 import { checkRound, startRound } from './game/round.js'
+import { removePlayerFromRoom } from './services/rooms.service.js'
 
 let wss
 export const initSocket = (server) => {
     wss = new WebSocketServer({ server })
-    buildArena()
 
     wss.on('connection', (ws) => {
 
@@ -25,15 +25,8 @@ export const initSocket = (server) => {
         })
 
         ws.on('close', () => {
-            removePlayer(ws.id)
+            removePlayerFromRoom(ws.room, ws.id)
 
-            if (players.size >= 1 && lobbyTimeout) {
-                clearTimeout(lobbyTimeout)
-                lobbyTimeout = null
-
-                return
-            }
-            checkRound()
         })
     })
 

@@ -1,23 +1,19 @@
 import { BALL_RADIUS } from './constants.js'
-import { players, bodies, round } from './state.js'
 import Matter from 'matter-js'
 
 const { Engine, World, Bodies, Body, Events } = Matter
 
-export const engine = Engine.create()
-engine.gravity.y = 1.25
-
-export const buildArena = () => {
-    for (const body of bodies) {
+export const buildArena = (room) => {
+    for (const body of room.arenas[0]) {
         switch (body.shape) {
             case 'rect':
-                World.add(engine.world, Bodies.rectangle(body.x, body.y, body.width, body.height, body.options))
+                World.add(room.engine.world, Bodies.rectangle(body.x, body.y, body.width, body.height, body.options))
                 break
             case 'circle':
-                World.add(engine.world, Bodies.circle(body.x, body.y, body.radius, body.options))
+                World.add(room.engine.world, Bodies.circle(body.x, body.y, body.radius, body.options))
                 break
             case 'polygon':
-                World.add(engine.world, Bodies.polygon(body.x, body.y, body.sides, body.radius, body.options))
+                World.add(room.engine.world, Bodies.polygon(body.x, body.y, body.sides, body.radius, body.options))
                 break
             default:
                 console.warn(`unknown body shape: ${body.shape}`);
@@ -25,49 +21,31 @@ export const buildArena = () => {
     }
 }
 
-const grounded = new Set()
+export const addPlayer = (room, id, x, y, color, username) => {
+    if (!room.engine) room.engine = Engine.create()
 
-Events.on(engine, 'collisionStart', (e) => {
-    for (const pair of e.pairs) {
-        const { bodyA, bodyB, collision } = pair
-        const normal = collision.normal
-
-        if (bodyA.isStatic && normal.y > -0.5) grounded.add(bodyB.player)
-        if (bodyB.isStatic && normal.y < 0.5) grounded.add(bodyA.player)
-    }
-})
-
-Events.on(engine, 'collisionEnd', (e) => {
-    for (const pair of e.pairs) {
-        const { bodyA, bodyB } = pair
-        if (bodyA.isStatic) grounded.delete(bodyB.player)
-        if (bodyB.isStatic) grounded.delete(bodyA.player)
-    }
-})
-
-export const addPlayer = (id, x, y, color, username) => {
     const ball = Bodies.circle(x, y, BALL_RADIUS, { restitution: 1, frictionAir: 0.0005, friction: 0 })
     ball.player = id
-    World.add(engine.world, ball)
+    World.add(room.engine.world, ball)
 
-    players.set(id, {
-        id: id,
-        color: color,
-        username: username,
-        ball: ball,
+    room.players.set(id, {
+        id,
+        color,
+        username,
+        ball,
         dead: true
     })
 }
 
-export const removePlayer = (id) => {
-    if (players.get(id).ball)
-        World.remove(engine.world, players.get(id).ball)
+export const removePlayer = (room, id) => {
+    if (room.players.get(id).ball)
+        World.remove(room.engine.world, room.players.get(id).ball)
 
-    players.delete(id)
+    room.players.delete(id)
 }
 
-export const killPlayer = (id) => {
-    const player = players.get(id)
+export const killPlayer = (room, id) => {
+    const player = room.players.get(id)
 
     player.dead = true
 
@@ -75,8 +53,8 @@ export const killPlayer = (id) => {
     Body.setPosition(player.ball, { x: -1000, y: -1000 })
 }
 
-export const revivePlayer = (id) => {
-    const player = players.get(id)
+export const revivePlayer = (room, id) => {
+    const player = room.players.get(id)
 
     Body.setVelocity(player.ball, { x: 0, y: 0 })
     Body.setPosition(player.ball, { x: Math.floor(Math.random() * 1000), y: 100 })
@@ -85,17 +63,18 @@ export const revivePlayer = (id) => {
     player.dead = false
 }
 
-export const applyInput = (id, x, y) => {
-    const ball = players.get(id).ball
+export const applyInput = (room, id, x, y) => {
+    const ball = room.players.get(id).ball
     if (!ball) return
     if (x === 0 && y === 0) return
 
     Body.applyForce(ball, ball.position, {
         x: x * 0.00125,
-        y: y < 0 && grounded.has(id) && Math.abs(ball.velocity.y) < 2.5 ? -0.05 : y * 0.001
+        // y: y < 0 && grounded.has(id) && Math.abs(ball.velocity.y) < 2.5 ? -0.05 : y * 0.001
+        y: y * 0.001
     })
 }
 
-export const update = () => {
-    Engine.update(engine, 1000 / 60)
+export const update = (room) => {
+    Engine.update(room.engine, 1000 / 60)
 }
