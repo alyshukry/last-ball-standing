@@ -64,41 +64,47 @@ const serialize = (room) => ({
 
 export const getFullRoom = (id) => rooms.get(id)
 
-export const addPlayerToRoom = (room, player, password, color, username) => {
+export const addPlayerToRoom = (roomId, playerId, password, color, username) => {
+    const room = rooms.get(roomId)
+
     if (!room) return false
     if (room.password && room.password !== password) return false
     addPlayer(
-        rooms.get(room),
-        player,
+        room,
+        playerId,
         Math.floor(Math.random() * 1000),
         300,
         color,
         username
     )
 
-    if (rooms.get(room).round.status === 'LOBBY' && rooms.get(room).players.size === 2)
-        rooms.get(room).lobbyTimeout = setTimeout(() => { startRound(rooms.get(room)) }, 5000)
+    if (room.round.status === 'LOBBY' && room.players.size === 2)
+        room.lobbyTimeout = setTimeout(() => { startRound(room) }, 5000)
 
-    if (rooms.get(room).players.size <= 1) startLoop(rooms.get(room))
+    if (room.players.size <= 1) startLoop(room)
 
     return true
 }
 
-export const removePlayerFromRoom = (room, player) => {
-    removePlayer(rooms.get(room), player)
+export const removePlayerFromRoom = (roomId, playerId) => {
+    const room = rooms.get(roomId)
 
-    if (rooms.get(room).players.size >= 1 && rooms.get(room).lobbyTimeout) {
-        clearTimeout(rooms.get(room).lobbyTimeout)
-        rooms.get(room).lobbyTimeout = null
+    removePlayer(room, playerId)
+
+    if (room.players.size >= 1 && room.lobbyTimeout) {
+        clearTimeout(room.lobbyTimeout)
+        room.lobbyTimeout = null
 
         return
     }
-    checkRound(getFullRoom(room))
+    checkRound(room)
 }
 
-export const verifyOwnerToken = (room, token, player) => {
-    if (rooms.get(room).token === token) {
-        rooms.get(room).owner = player
+export const verifyOwnerToken = (roomId, playerId, token) => {
+    const room = rooms.get(roomId)
+
+    if (room.token === token) {
+        room.owner = player
         return true
     }
     return false

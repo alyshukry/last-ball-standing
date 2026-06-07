@@ -12,14 +12,13 @@ export const handleJoin = (ws, data) => {
     if (data.token) {
         const isOwner = verifyOwnerToken(ws.room, data.token)
         if (!isOwner) send(ws, { error: 'incorrect room token' })
-        return
     }
 
     if (addPlayerToRoom(ws.room, ws.id, data.password || null, data.color, data.username)) {
         for (const client of getSocketServer().clients)
             if (client.room === ws.room) send(client, { type: 'player_info', id: ws.id, color: data.color, username: data.username })
         for (const client of getSocketServer().clients)
-            if (client.id !== ws.id && client.room === ws.room) send(ws, { type: 'player_info', id: client.id, color: data.color, username: data.username })
+            if (client.id !== ws.id && client.room === ws.room) send(ws, { type: 'player_info', id: client.id, color: data.color, username: data.username  })
         send(ws, { type: 'arena', bodies: getRoom(ws.room).arenas[0] })
     }
     else {
