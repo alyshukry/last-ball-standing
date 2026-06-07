@@ -2,7 +2,6 @@ import { WebSocketServer } from 'ws'
 import { send, parse } from './utils/socket.js'
 import { handleInput } from './handlers/input.js'
 import { handleJoin } from './handlers/join.js'
-import { startLoop } from './game/loop.js'
 import { removePlayerFromRoom } from './services/rooms.service.js'
 
 let wss

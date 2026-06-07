@@ -1,9 +1,7 @@
 import { update } from './world.js'
 import { send } from '../utils/socket.js'
-import { BALL_RADIUS, WORLD_HEIGHT } from './constants.js'
-import { killOutOfBounds, startRound } from './round.js'
+import { killOutOfBounds } from './round.js'
 import { getSocketServer } from '../socket.js'
-import { getFullRoom } from '../services/rooms.service.js'
 
 let tick = 0
 

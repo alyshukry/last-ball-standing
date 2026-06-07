@@ -1,7 +1,7 @@
 import { send } from '../utils/socket.js'
 import { getSocketServer } from '../socket.js'
 import { BALL_RADIUS, WORLD_HEIGHT } from './constants.js'
-import { killPlayer, revivePlayer } from './world.js'
+import { buildArena, killPlayer, revivePlayer } from './world.js'
 
 export const killOutOfBounds = (room, id) => {
     if (room.round.status !== 'PLAYING') return
@@ -44,8 +44,12 @@ export const endRound = (room) => {
 
 export const startRound = (room) => {
     if (room.players.size >= 2) {
-        for (const [id, player] of room.players)
-            revivePlayer(room, id)
+        let playerIndex = 0
+        for (const [id, player] of room.players) {
+            revivePlayer(room, id, playerIndex)
+            playerIndex++
+        }
+        buildArena(room, room.round.number % room.arenas.length)
         room.round.status = 'PLAYING'
     }
     else {

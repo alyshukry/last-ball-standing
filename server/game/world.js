@@ -1,3 +1,5 @@
+import { getSocketServer } from '../socket.js'
+import { send } from '../utils/socket.js'
 import { BALL_RADIUS } from './constants.js'
 import Matter from 'matter-js'
 
@@ -20,11 +22,20 @@ export const setUpRoom = (room) => {
             if (bodyB.isStatic) room.physics.grounded.delete(bodyA.player)
         }
     })
-    buildArena(room)
+    buildArena(room, 0)
 }
 
-export const buildArena = (room) => {
-    for (const body of room.arenas[0]) {
+export const buildArena = (room, index) => {
+    for (const client of getSocketServer().clients)
+        if (client.room === room.id)
+            send(client, {
+                type: 'arena',
+                bodies: room.arenas[room.round.number % room.arenas.length].bodies
+            })
+
+    World.remove(room.physics.engine.world, room.physics.engine.world.bodies.filter(b => b.isStatic)) // clear world
+
+    for (const body of room.arenas[index].bodies) {
         switch (body.shape) {
             case 'rect':
                 World.add(room.physics.engine.world, Bodies.rectangle(body.x, body.y, body.width, body.height, body.options))
@@ -53,6 +64,8 @@ export const addPlayer = (room, id, x, y, color, username) => {
         ball,
         dead: true
     })
+
+    killPlayer(room, id)
 }
 
 export const removePlayer = (room, id) => {
@@ -71,11 +84,14 @@ export const killPlayer = (room, id) => {
     Body.setPosition(player.ball, { x: -1000, y: -1000 })
 }
 
-export const revivePlayer = (room, id) => {
+export const revivePlayer = (room, id, playerIndex) => {
     const player = room.players.get(id)
+    const arena = room.arenas[room.round.number % room.arenas.length]
+    const spawn = arena.spawns[playerIndex % arena.spawns.length]
+    const offset = Math.floor(playerIndex / arena.spawns.length) * 60
 
     Body.setVelocity(player.ball, { x: 0, y: 0 })
-    Body.setPosition(player.ball, { x: Math.floor(Math.random() * 1000), y: 100 })
+    Body.setPosition(player.ball, { x: spawn.x, y: spawn.y - offset })
     Body.setStatic(player.ball, false)
 
     player.dead = false

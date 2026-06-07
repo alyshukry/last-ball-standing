@@ -32,6 +32,7 @@ ws.onmessage = (e) => {
             playersInfo[parsed.id] = { color: parsed.color }
         }; break
         case 'arena': {
+            console.log(parsed)
             arena = parsed.bodies
         }; break
         case 'round_end': {
@@ -40,42 +41,6 @@ ws.onmessage = (e) => {
     }
 
 }
-
-const keyMap = {
-    w: { type: 'input', x: 0, y: -1 },
-    a: { type: 'input', x: -1, y: 0 },
-    s: { type: 'input', x: 0, y: 1 },
-    d: { type: 'input', x: 1, y: 0 },
-}
-
-const keysPressed = new Set()
-
-setInterval(() => {
-    let x = 0, y = 0
-
-    if (keysPressed.has('w')) y -= 1
-    if (keysPressed.has('s')) y += 1
-    if (keysPressed.has('a')) x -= 1
-    if (keysPressed.has('d')) x += 1
-
-    if (x !== 0 || y !== 0) {
-        if (ws.readyState === WebSocket.OPEN) {
-            ws.send(JSON.stringify({ type: 'input', x, y }))
-        }
-    }
-}, 1000 / 30)
-
-window.addEventListener('keydown', (event) => {
-    const key = event.key.toLowerCase()
-    if (keyMap[key]) {
-        keysPressed.add(key)
-    }
-})
-
-window.addEventListener('keyup', (event) => {
-    const key = event.key.toLowerCase()
-    keysPressed.delete(key)
-})
 
 const canvas = document.getElementById('main')
 const ctx = canvas.getContext('2d')
@@ -138,3 +103,39 @@ function render() {
     requestAnimationFrame(render)
 }
 render()
+
+const keyMap = {
+    w: { type: 'input', x: 0, y: -1 },
+    a: { type: 'input', x: -1, y: 0 },
+    s: { type: 'input', x: 0, y: 1 },
+    d: { type: 'input', x: 1, y: 0 },
+}
+
+const keysPressed = new Set()
+
+setInterval(() => {
+    let x = 0, y = 0
+
+    if (keysPressed.has('w')) y -= 1
+    if (keysPressed.has('s')) y += 1
+    if (keysPressed.has('a')) x -= 1
+    if (keysPressed.has('d')) x += 1
+
+    if (x !== 0 || y !== 0) {
+        if (ws.readyState === WebSocket.OPEN) {
+            ws.send(JSON.stringify({ type: 'input', x, y }))
+        }
+    }
+}, 1000 / 30)
+
+window.addEventListener('keydown', (event) => {
+    const key = event.key.toLowerCase()
+    if (keyMap[key]) {
+        keysPressed.add(key)
+    }
+})
+
+window.addEventListener('keyup', (event) => {
+    const key = event.key.toLowerCase()
+    keysPressed.delete(key)
+})

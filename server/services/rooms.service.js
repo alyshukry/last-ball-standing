@@ -75,6 +75,7 @@ export const addPlayerToRoom = (roomId, playerId, password, color, username) => 
 }
 
 export const removePlayerFromRoom = (roomId, playerId) => {
+    if (!roomId || !playerId) return
     const room = rooms.get(roomId)
 
     removePlayer(room, playerId)
