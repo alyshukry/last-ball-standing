@@ -2,11 +2,7 @@ import { WebSocketServer } from 'ws'
 import { send, parse } from './utils/socket.js'
 import { handleInput } from './handlers/input.js'
 import { handleJoin } from './handlers/join.js'
-import { randomUUID } from 'crypto'
 import { startLoop } from './game/loop.js'
-import { bodies, players, round } from './game/state.js'
-import { addPlayer, buildArena, removePlayer } from './game/world.js'
-import { checkRound, startRound } from './game/round.js'
 import { removePlayerFromRoom } from './services/rooms.service.js'
 
 let wss

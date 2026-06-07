@@ -1,5 +1,4 @@
-import { addPlayer } from '../game/world.js'
-import { addPlayerToRoom, getRoom, verifyOwnerToken } from '../services/rooms.service.js'
+import { addPlayerToRoom, getFullRoom, verifyOwnerToken } from '../services/rooms.service.js'
 import { getSocketServer } from '../socket.js'
 import { send } from '../utils/socket.js'
 import { randomUUID } from 'crypto'
@@ -19,7 +18,7 @@ export const handleJoin = (ws, data) => {
             if (client.room === ws.room) send(client, { type: 'player_info', id: ws.id, color: data.color, username: data.username })
         for (const client of getSocketServer().clients)
             if (client.id !== ws.id && client.room === ws.room) send(ws, { type: 'player_info', id: client.id, color: data.color, username: data.username  })
-        send(ws, { type: 'arena', bodies: getRoom(ws.room).arenas[0] })
+        send(ws, { type: 'arena', bodies: getFullRoom(ws.room).arenas[0] })
     }
     else {
         send(ws, { error: 'couldn\'t join room' })

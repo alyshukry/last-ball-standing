@@ -1,5 +1,5 @@
 import { randomInt, randomUUID } from 'crypto'
-import { buildArena, removePlayer, addPlayer } from '../game/world.js'
+import { buildArena, removePlayer, addPlayer, setUpRoom } from '../game/world.js'
 import { checkRound, startRound } from '../game/round.js'
 import Matter from 'matter-js'
 import { startLoop } from '../game/loop.js'
@@ -10,8 +10,6 @@ const rooms = new Map()
 
 export const createRoom = ({ name, password, arenas }) => {
     const token = randomInt(10).toString() // creator sends to server to verify room ownership on ws connection
-    const engine = Engine.create()
-    const grounded = new Set()
 
     const room = {
         id: randomInt(10).toString(),
@@ -21,30 +19,22 @@ export const createRoom = ({ name, password, arenas }) => {
         token,
         arenas,
         players: new Map(),
-        round: { status: 'LOBBY', number: 0, winner: null, wins: new Map() },
-        lobbyTimeout: null,
-        engine,
-        grounded
+        round: {
+            status: 'LOBBY',
+            number: 0,
+            winner: null,
+            wins: new Map(),
+            lobbyTimeout: null
+        },
+        physics: {
+            engine: Engine.create(),
+            grounded: new Set()
+        }
     }
     rooms.set(room.id, room)
 
-    Events.on(engine, 'collisionStart', (e) => {
-        for (const pair of e.pairs) {
-            const { bodyA, bodyB, collision } = pair
-            const normal = collision.normal
-
-            if (bodyA.isStatic && normal.y > -0.5) grounded.add(bodyB.player)
-            if (bodyB.isStatic && normal.y < 0.5) grounded.add(bodyA.player)
-        }
-    })
-    Events.on(engine, 'collisionEnd', (e) => {
-        for (const pair of e.pairs) {
-            const { bodyA, bodyB } = pair
-            if (bodyA.isStatic) grounded.delete(bodyB.player)
-            if (bodyB.isStatic) grounded.delete(bodyA.player)
-        }
-    })
-    buildArena(room)
+    setUpRoom(room)
+    startLoop(room)
 
     return { room: serialize(room), token }
 }
@@ -79,9 +69,7 @@ export const addPlayerToRoom = (roomId, playerId, password, color, username) => 
     )
 
     if (room.round.status === 'LOBBY' && room.players.size === 2)
-        room.lobbyTimeout = setTimeout(() => { startRound(room) }, 5000)
-
-    if (room.players.size <= 1) startLoop(room)
+        room.round.lobbyTimeout = setTimeout(() => { startRound(room) }, 5000)
 
     return true
 }
@@ -91,9 +79,9 @@ export const removePlayerFromRoom = (roomId, playerId) => {
 
     removePlayer(room, playerId)
 
-    if (room.players.size >= 1 && room.lobbyTimeout) {
-        clearTimeout(room.lobbyTimeout)
-        room.lobbyTimeout = null
+    if (room.players.size >= 1 && room.round.lobbyTimeout) {
+        clearTimeout(room.round.lobbyTimeout)
+        room.round.lobbyTimeout = null
 
         return
     }
@@ -104,7 +92,7 @@ export const verifyOwnerToken = (roomId, playerId, token) => {
     const room = rooms.get(roomId)
 
     if (room.token === token) {
-        room.owner = player
+        room.owner = playerId
         return true
     }
     return false

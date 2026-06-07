@@ -36,7 +36,7 @@ export const endRound = (room) => {
             send(client, {
                 type: 'round_end',
                 winner: winner ? winner.id : null,
-                wins: room.round.wins
+                wins: Object.fromEntries(room.round.wins)
             })
 
     setTimeout(() => startRound(room), 5000)
