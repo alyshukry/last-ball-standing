@@ -8,10 +8,15 @@
     <link rel="stylesheet" href="./style.css">
 </head>
 
-
-<body>
-    <div class="view" id="home">home</div>
-    <div class="view" id="rooms">rooms</div>
+<body style="display: none;">
+    <div class="view" id="home">
+        <button id="join-room">Join room</button>
+        <button id="create-room">Create room</button>
+    </div>
+    <div class="view" id="rooms">
+        <h1>Rooms</h1>
+        <ul id="rooms-list"></ul>
+    </div>
     <div class="view" id="lobby">lobby</div>
     <div class="view" id="game">
         <canvas id="game" width="1000" height="500"></canvas>
@@ -19,6 +24,10 @@
     </div>
     <script src="./scripts/main.js" type="module"></script>
     <script src="./scripts/socket.js" type="module"></script>
+    <script src="./scripts//views/game.js" type="module"></script>
+    <script src="./scripts//views/home.js" type="module"></script>
+    <script src="./scripts//views/lobby.js" type="module"></script>
+    <script src="./scripts//views/rooms.js" type="module"></script>
 </body>
 
 </html>

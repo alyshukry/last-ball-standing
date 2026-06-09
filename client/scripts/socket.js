@@ -3,7 +3,7 @@ const roomId = params.get('roomId')
 const token = params.get('token')
 const password = params.get('password')
 
-export const ws = new WebSocket('ws://192.168.1.44:8000')
+export const connectToRoom = (id, password, )
 
 export const state = {
     prevState: {},
