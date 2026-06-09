@@ -1,2 +1,24 @@
-<canvas id="main" width="1000" height="500" style="width: 100%; background-color: black;"></canvas>
-<script src='test.js' type="module"></script>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Last Ball Standing!</title>
+    <link rel="stylesheet" href="./style.css">
+</head>
+
+
+<body>
+    <div class="view" id="home">home</div>
+    <div class="view" id="rooms">rooms</div>
+    <div class="view" id="lobby">lobby</div>
+    <div class="view" id="game">
+        <canvas id="game" width="1000" height="500"></canvas>
+        <script src="./scripts/views/game.js" type="module"></script>
+    </div>
+    <script src="./scripts/main.js" type="module"></script>
+    <script src="./scripts/socket.js" type="module"></script>
+</body>
+
+</html>

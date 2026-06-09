@@ -1,0 +1,15 @@
+:root {
+    --canvas-bg: black;
+}
+
+canvas {
+    width: 100vw;
+    height: 100vh;
+    display: block;
+    object-fit: contain;
+    background-color: var(--canvas-bg);
+}
+
+body {
+    margin: 0;
+}

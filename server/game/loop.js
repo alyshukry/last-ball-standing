@@ -3,9 +3,9 @@ import { send } from '../utils/socket.js'
 import { killOutOfBounds } from './round.js'
 import { getSocketServer } from '../socket.js'
 
-let tick = 0
 
 export const startLoop = (room) => {
+    let tick = 0
     const payload = {
         type: 'state',
         players: {}
