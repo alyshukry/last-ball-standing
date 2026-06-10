@@ -55,7 +55,7 @@ document.querySelector('button#create-room').onclick = (e) => {
         const name = e.target.name.value || null
         const password = e.target.password.value || null
 
-        const res = await fetch(window.location.protocol + API_URL + '/rooms', {
+        const res = await fetch(window.location.protocol + '//' + API_URL + '/rooms', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({

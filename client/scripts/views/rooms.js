@@ -5,7 +5,7 @@ const roomsList = document.querySelector('ul#rooms-list')
 
 async function displayRooms() {
     if (!localStorage.getItem('room') && !roomsList.querySelector('form')) {
-        const res = await fetch(window.location.protocol + API_URL + '/rooms')
+        const res = await fetch(window.location.protocol + '//' + API_URL + '/rooms')
 
         if (!res.ok) {
             roomsList.innerHTML = 'Failed to reach server'
