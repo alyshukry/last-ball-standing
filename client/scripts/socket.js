@@ -11,7 +11,8 @@ export const state = {
 export let ws
 
 export const connectToRoom = (room, token = null, password = null, color, username) => {
-    ws = new WebSocket('ws://' + API_URL)
+    const wsProtocol = window.location.protocol === 'https:' ? 'wss://' : 'ws://'
+    ws = new WebSocket(wsProtocol + API_URL)
     setUpWs(ws)
 
     ws.onopen = () => {
