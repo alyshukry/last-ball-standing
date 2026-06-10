@@ -46,10 +46,8 @@ const setUpWs = (ws) => {
                 state.arena = parsed.bodies
                 break
             case 'round_end':
-                console.log(parsed.winner + ' wins')
                 break
             case 'join_error':
-                console.log(parsed.error)
                 ws.close()
                 break
             case 'joined':
