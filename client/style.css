@@ -13,3 +13,22 @@ canvas {
 body {
     margin: 0;
 }
+
+.ball-preview {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.customization {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.arrows {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}

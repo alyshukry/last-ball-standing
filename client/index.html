@@ -10,16 +10,16 @@
 
 <body style="display: none;">
     <div class="view" id="home">
-        <main>
-            <div class="customization">
-                <form>
-                    <input type="text" id="username" name="username" value="Enter your name">
-                </form>
-                
+        <input type="text" id="username" placeholder="Enter your name">
+        <div class="customization">
+            <div class="arrows">
+                <button class="arrow" id="color-left">‹</button>
+                <div class="ball-preview" id="ball-preview"></div>
+                <button class="arrow" id="color-right">›</button>
             </div>
-            <button id="join-room">Join room</button>
-            <button id="create-room">Create room</button>
-        </main>
+        </div>
+        <button id="join-room">Play!</button>
+        <button id="create-room">Create room</button>
     </div>
     <div class="view" id="rooms">
         <h1>Rooms</h1>

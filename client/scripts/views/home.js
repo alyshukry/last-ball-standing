@@ -1,6 +1,39 @@
 import { showView, API_URL } from '../main.js'
 import { joinRoom } from '../views/rooms.js'
 
+const COLORS = ['#e74c3c', '#e67e22', '#f1c40f', '#2ecc71', '#3498db', '#9b59b6', '#ff69b4', '#1abc9c']
+let colorIndex = 0
+
+const ballPreview = document.querySelector('#ball-preview')
+const usernameInput = document.querySelector('#username')
+
+const updateBall = () => {
+    ballPreview.style.backgroundColor = COLORS[colorIndex]
+    localStorage.setItem('color', COLORS[colorIndex])
+}
+
+document.querySelector('#color-left').addEventListener('click', () => {
+    colorIndex = (colorIndex - 1 + COLORS.length) % COLORS.length
+    updateBall()
+})
+document.querySelector('#color-right').addEventListener('click', () => {
+    colorIndex = (colorIndex + 1) % COLORS.length
+    updateBall()
+})
+
+usernameInput.addEventListener('input', () => {
+    localStorage.setItem('name', usernameInput.value)
+})
+
+// restore from localStorage
+const savedColor = localStorage.getItem('color')
+if (savedColor) {
+    colorIndex = COLORS.indexOf(savedColor)
+    if (colorIndex === -1) colorIndex = 0
+}
+usernameInput.value = localStorage.getItem('name') || ''
+updateBall()
+
 document.querySelector('button#join-room').addEventListener('click', (e) => {
     showView('rooms')
 })
