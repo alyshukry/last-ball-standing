@@ -5,7 +5,7 @@ import roomsRouter from './routes/rooms.routes.js'
 import path from 'path'
 import { fileURLToPath } from 'url'
 
-const PORT = 8000
+const PORT = process.env.PORT || 8000
 
 const app = express()
 
