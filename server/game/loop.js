@@ -33,7 +33,7 @@ export const startLoop = (room) => {
             if (!room.players.has(id) || room.players.get(id).dead) delete payload.players[id]
 
         for (const client of getSocketServer().clients) {
-            if (client.readyState === 1 && client.room === room.id)
+            if (client.readyState === 1 && client.room === room.id && room.round.status !== 'LOBBY')
                 send(client, payload)
         }
     }, 1000 / 30)

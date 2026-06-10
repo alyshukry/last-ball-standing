@@ -1,4 +1,3 @@
-import { BALL_RADIUS } from '../../../server/game/constants.js'
 import { ws, state } from '../socket.js'
 
 const canvas = document.querySelector('canvas#game')
@@ -22,6 +21,7 @@ function renderBody(body) {
             ctx.fill()
             break
         case 'polygon':
+            ctx.rotate((body.options.angle || 0) + Math.PI / body.sides)
             ctx.beginPath()
             for (let i = 0; i < body.sides; i++) {
                 const angle = (i / body.sides) * Math.PI * 2
@@ -44,6 +44,9 @@ function render() {
     ctx.fillStyle = canvasBg
     ctx.fillRect(0, 0, canvas.width, canvas.height)
 
+    ctx.save()
+    ctx.scale(2, 2)
+
     for (const body of state.arena) renderBody(body)
 
     for (const [id, player] of Object.entries(state.currentState.players || {})) {
@@ -52,11 +55,12 @@ function render() {
         const y = prev ? prev.y + (player.y - prev.y) * t : player.y
 
         ctx.beginPath()
-        ctx.arc(x, y, BALL_RADIUS, 0, Math.PI * 2)
+        ctx.arc(x, y, 25, 0, Math.PI * 2)
         ctx.fillStyle = state.playersInfo[id]?.color ?? 'black'
         ctx.fill()
     }
 
+    ctx.restore()
     requestAnimationFrame(render)
 }
 render()
@@ -71,7 +75,7 @@ setInterval(() => {
     if (keysPressed.has('a')) x -= 1
     if (keysPressed.has('d')) x += 1
 
-    if ((x !== 0 || y !== 0) && ws.readyState === WebSocket.OPEN)
+    if ((x !== 0 || y !== 0) && ws?.readyState === WebSocket.OPEN)
         ws.send(JSON.stringify({ type: 'input', x, y }))
 }, 1000 / 30)
 

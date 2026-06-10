@@ -13,18 +13,27 @@ export const handleJoin = (ws, data) => {
         if (!isOwner) send(ws, { error: 'incorrect room token' })
     }
 
-    if (addPlayerToRoom(ws.room, ws.id, data.password || null, data.color, data.username)) {
-        for (const client of getSocketServer().clients)
-            if (client.room === ws.room) send(client, { type: 'player_info', id: ws.id, color: data.color, username: data.username })
-        for (const client of getSocketServer().clients)
-            if (client.id !== ws.id && client.room === ws.room) {
-                const player = getFullRoom(ws.room).players.get(client.id)
-                send(ws, { type: 'player_info', id: client.id, color: player.color, username: player.username })
-            }
-        const room = getFullRoom(ws.room)
-        send(ws, { type: 'arena', bodies: getFullRoom(ws.room).arenas[room.round.number % room.arenas.length].bodies })
-    }
-    else {
-        send(ws, { error: 'couldn\'t join room' })
+    const playerJoin = addPlayerToRoom(ws.room, ws.id, data.password || null, data.color, data.username)
+
+    switch (playerJoin) {
+        case 'ok':
+            send(ws, { type: 'joined', room: ws.room, color: data.color, username: data.username })
+
+            for (const client of getSocketServer().clients)
+                if (client.room === ws.room) send(client, { type: 'player_info', id: ws.id, color: data.color, username: data.username })
+            for (const client of getSocketServer().clients)
+                if (client.id !== ws.id && client.room === ws.room) {
+                    const player = getFullRoom(ws.room).players.get(client.id)
+                    send(ws, { type: 'player_info', id: client.id, color: player.color, username: player.username })
+                }
+            const room = getFullRoom(ws.room)
+            send(ws, { type: 'arena', bodies: getFullRoom(ws.room).arenas[room.round.number % room.arenas.length].bodies })
+            break
+        case 'room_not_found':
+            send(ws, { type: 'join_error', error: 'Room not found' })
+            break
+        case 'incorrect_password':
+            send(ws, { type: 'join_error', error: 'Incorrect password' })
+            break
     }
 }

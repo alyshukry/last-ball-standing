@@ -14,8 +14,12 @@ export const initSocket = (server) => {
             const parsed = parse(data)
 
             switch (parsed.type) {
-                case 'join_room': handleJoin(ws, parsed); break
-                case 'input': handleInput(ws, parsed); break
+                case 'join_room':
+                    handleJoin(ws, parsed)
+                    break
+                case 'input':
+                    handleInput(ws, parsed)
+                    break
             }
         })
 

@@ -1,4 +1,5 @@
 import { API_URL } from '../main.js'
+import { connectToRoom } from '../socket.js'
 
 const roomsList = document.querySelector('ul#rooms-list')
 
@@ -34,7 +35,7 @@ async function displayRooms() {
                     form.addEventListener('submit', (e) => {
                         e.preventDefault()  // stop page reload
                         const password = e.target.password.value || null
-                        attemptJoin(data[i].id, password)
+                        joinRoom(data[i].id, null, password)
                     })
 
                     roomElement.appendChild(form)
@@ -50,6 +51,12 @@ async function displayRooms() {
 displayRooms()
 setInterval(displayRooms, 2500)
 
-const attemptJoin = (id, password) => {
-    console.log(id, password)
+export const joinRoom = (id, token = null, password = null) => {
+    connectToRoom(
+        id,
+        token,
+        password,
+        localStorage.getItem('color') || 'rgb(255, 0, 255)',
+        localStorage.getItem('name') || 'guest'
+    )
 }

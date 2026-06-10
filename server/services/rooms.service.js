@@ -3,6 +3,7 @@ import { buildArena, removePlayer, addPlayer, setUpRoom } from '../game/world.js
 import { checkRound, startRound } from '../game/round.js'
 import Matter from 'matter-js'
 import { startLoop } from '../game/loop.js'
+import { broadcastToRoom } from '../utils/socket.js'
 
 const { Engine, Events } = Matter
 
@@ -57,8 +58,9 @@ export const getFullRoom = (id) => rooms.get(id)
 export const addPlayerToRoom = (roomId, playerId, password, color, username) => {
     const room = rooms.get(roomId)
 
-    if (!room) return false
-    if (room.password && room.password !== password) return false
+    if (!room) return 'room_not_found'
+    if (room.password && room.password !== password) return 'incorrect_password'
+
     addPlayer(
         room,
         playerId,
@@ -69,18 +71,28 @@ export const addPlayerToRoom = (roomId, playerId, password, color, username) => 
     )
 
     if (room.round.status === 'LOBBY' && room.players.size === 2)
-        room.round.lobbyTimeout = setTimeout(() => { startRound(room) }, 5000)
+        room.round.lobbyTimeout = setTimeout(() => {
+            startRound(room)
+            room.round.lobbyTimeout = null
+        }, 5000)
 
-    return true
+    return 'ok'
 }
 
 export const removePlayerFromRoom = (roomId, playerId) => {
     if (!roomId || !playerId) return
     const room = rooms.get(roomId)
+    if (!room) return
+    if (!getFullRoom(roomId).players.get(playerId)) return
 
     removePlayer(room, playerId)
 
-    if (room.players.size >= 1 && room.round.lobbyTimeout) {
+    broadcastToRoom(roomId, {
+        type: 'player_left',
+        id: playerId
+    })
+
+    if (room.players.size <= 1 && room.round.lobbyTimeout) {
         clearTimeout(room.round.lobbyTimeout)
         room.round.lobbyTimeout = null
 

@@ -1,5 +1,5 @@
 import { getSocketServer } from '../socket.js'
-import { send } from '../utils/socket.js'
+import { send, broadcastToRoom } from '../utils/socket.js'
 import { BALL_RADIUS } from './constants.js'
 import Matter from 'matter-js'
 
@@ -26,12 +26,10 @@ export const setUpRoom = (room) => {
 }
 
 export const buildArena = (room, index) => {
-    for (const client of getSocketServer().clients)
-        if (client.room === room.id)
-            send(client, {
-                type: 'arena',
-                bodies: room.arenas[room.round.number % room.arenas.length].bodies
-            })
+    broadcastToRoom(room.id, {
+        type: 'arena',
+        bodies: room.arenas[room.round.number % room.arenas.length].bodies
+    })
 
     World.remove(room.physics.engine.world, room.physics.engine.world.bodies.filter(b => b.isStatic)) // clear world
 
