@@ -9,8 +9,8 @@ export const handleJoin = (ws, data) => {
 
     ws.token = data.token
     if (data.token) {
-        const isOwner = verifyOwnerToken(ws.room, data.token)
-        if (!isOwner) send(ws, { error: 'incorrect room token' })
+        const isOwner = verifyOwnerToken(ws.room, ws.id, data.token)
+        if (!isOwner) send(ws, { type:'ownership_error', error: 'Incorrect room token' })
     }
 
     const playerJoin = addPlayerToRoom(ws.room, ws.id, data.password || null, data.color, data.username)
