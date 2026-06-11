@@ -1,4 +1,6 @@
-import { ws, state } from '../socket.js'
+import { state } from '../state.js'
+import { ws } from '../socket.js'
+import { on } from '../events.js'
 
 const canvas = document.querySelector('canvas#game')
 const ctx = canvas.getContext('2d')
@@ -81,3 +83,7 @@ setInterval(() => {
 
 window.addEventListener('keydown', (e) => { if (keyMap[e.key.toLowerCase()]) keysPressed.add(e.key.toLowerCase()) })
 window.addEventListener('keyup', (e) => keysPressed.delete(e.key.toLowerCase()))
+
+on('round_end', (data) => {
+    console.log(state.playersInfo[data.winner].username + ' wins')
+})
