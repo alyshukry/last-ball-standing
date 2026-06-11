@@ -31,11 +31,14 @@
         </main>
     </div>
     <div class="view" id="game">
+        <div id="win-screen" style="display:none">
+            <h1 id="win-text"></h1>
+        </div>
         <canvas id="game" width="2000" height="1000"></canvas>
-        <script src="./scripts/views/game.js" type="module"></script>
     </div>
     <script src="./scripts/main.js" type="module"></script>
     <script src="./scripts/socket.js" type="module"></script>
+    <script src="./scripts/state.js" type="module"></script>
     <script src="./scripts//views/game.js" type="module"></script>
     <script src="./scripts//views/home.js" type="module"></script>
     <script src="./scripts//views/lobby.js" type="module"></script>

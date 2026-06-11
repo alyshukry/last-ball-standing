@@ -1,6 +1,5 @@
 import { emit, on } from './events.js'
 import { showView, API_URL } from './main.js'
-import { state } from './state.js'
 
 export let ws
 

@@ -17,7 +17,7 @@ export const handleJoin = (ws, data) => {
 
     switch (playerJoin) {
         case 'ok':
-            send(ws, { type: 'joined', room: ws.room, color: data.color, username: data.username })
+            send(ws, { type: 'joined', id: ws.id, room: ws.room, color: data.color, username: data.username })
 
             for (const client of getSocketServer().clients)
                 if (client.room === ws.room) send(client, { type: 'player_info', id: ws.id, color: data.color, username: data.username })
@@ -27,7 +27,6 @@ export const handleJoin = (ws, data) => {
                     send(ws, { type: 'player_info', id: client.id, color: player.color, username: player.username })
                 }
             const room = getFullRoom(ws.room)
-            send(ws, { type: 'arena', bodies: getFullRoom(ws.room).arenas[room.round.number % room.arenas.length].bodies })
             break
         case 'room_not_found':
             send(ws, { type: 'join_error', error: 'Room not found' })

@@ -56,6 +56,18 @@ function render() {
         const x = prev ? prev.x + (player.x - prev.x) * t : player.x
         const y = prev ? prev.y + (player.y - prev.y) * t : player.y
 
+        // triangle indicator
+        if (id === state.myId) {
+            ctx.beginPath()
+            ctx.moveTo(x, y - 35)
+            ctx.lineTo(x - 6, y - 45)
+            ctx.lineTo(x + 6, y - 45)
+            ctx.closePath()
+            ctx.fillStyle = state.playersInfo[id]?.color ?? 'white'
+            ctx.fill()
+        }
+
+        // ball
         ctx.beginPath()
         ctx.arc(x, y, 25, 0, Math.PI * 2)
         ctx.fillStyle = state.playersInfo[id]?.color ?? 'black'
@@ -84,6 +96,14 @@ setInterval(() => {
 window.addEventListener('keydown', (e) => { if (keyMap[e.key.toLowerCase()]) keysPressed.add(e.key.toLowerCase()) })
 window.addEventListener('keyup', (e) => keysPressed.delete(e.key.toLowerCase()))
 
+const winScreen = document.querySelector('#win-screen')
+const winText = document.querySelector('#win-text')
+
 on('round_end', (data) => {
-    console.log(state.playersInfo[data.winner].username + ' wins')
+    winText.textContent = state.playersInfo[data.winner].username + ' wins'
+    winScreen.style.display = 'flex'
+})
+
+on('round_start', () => {
+    winScreen.style.display = 'none'
 })
