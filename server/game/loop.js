@@ -36,5 +36,5 @@ export const startLoop = (room) => {
             if (client.readyState === 1 && client.room === room.id && room.round.status !== 'LOBBY')
                 send(client, payload)
         }
-    }, 1000 / 30)
+    }, 1000 / 60)
 }

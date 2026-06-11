@@ -77,7 +77,7 @@ setInterval(() => {
 
     if ((x !== 0 || y !== 0) && ws?.readyState === WebSocket.OPEN)
         ws.send(JSON.stringify({ type: 'input', x, y }))
-}, 1000 / 30)
+}, 1000 / 60)
 
 window.addEventListener('keydown', (e) => { if (keyMap[e.key.toLowerCase()]) keysPressed.add(e.key.toLowerCase()) })
 window.addEventListener('keyup', (e) => keysPressed.delete(e.key.toLowerCase()))
