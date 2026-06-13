@@ -15,7 +15,7 @@ on('state', (data) => {
     state.lastUpdate = Date.now()
 })
 
-on('player_info', (data) => { state.playersInfo[data.id] = { id: data.id, color: data.color, username: data.username } })
+on('player_info', (data) => { state.playersInfo[data.id] = { id: data.id, color: data.color, eyes: data.eyes, mouth: data.mouth, username: data.username } })
 
 on('arena', (data) => { state.arena = data.bodies })
 

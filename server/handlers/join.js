@@ -13,18 +13,18 @@ export const handleJoin = (ws, data) => {
         if (!isOwner) send(ws, { type:'ownership_error', error: 'Incorrect room token' })
     }
 
-    const playerJoin = addPlayerToRoom(ws.room, ws.id, data.password || null, data.color, data.username)
+    const playerJoin = addPlayerToRoom(ws.room, ws.id, data.password || null, data.color, data.eyes, data.mouth, data.username)
 
     switch (playerJoin) {
         case 'ok':
-            send(ws, { type: 'joined', id: ws.id, room: ws.room, color: data.color, username: data.username })
+            send(ws, { type: 'joined', id: ws.id, room: ws.room, color: data.color, eyes: data.eyes, mouth: data.mouth, username: data.username })
 
             for (const client of getSocketServer().clients)
-                if (client.room === ws.room) send(client, { type: 'player_info', id: ws.id, color: data.color, username: data.username })
+                if (client.room === ws.room) send(client, { type: 'player_info', id: ws.id, color: data.color, eyes: data.eyes, mouth: data.mouth, username: data.username })
             for (const client of getSocketServer().clients)
                 if (client.id !== ws.id && client.room === ws.room) {
                     const player = getFullRoom(ws.room).players.get(client.id)
-                    send(ws, { type: 'player_info', id: client.id, color: player.color, username: player.username })
+                    send(ws, { type: 'player_info', id: client.id, color: player.color, eyes: player.eyes, mouth: player.mouth, username: player.username })
                 }
             const room = getFullRoom(ws.room)
             break

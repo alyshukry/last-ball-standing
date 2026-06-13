@@ -1,38 +1,54 @@
-import { showView, API_URL } from '../main.js'
+import { showView, API_URL, renderHtmlBall, AVATAR_COLORS, AVATAR_EYES, AVATAR_MOUTHS } from '../main.js'
 import { joinRoom } from '../views/rooms.js'
 
-const COLORS = ['#ff0000', '#ff7700', '#fff200', '#00ff6a', '#0099ff', '#b700ff', '#ff0080']
-let colorIndex = 0
-
-const ballPreview = document.querySelector('#ball-preview')
-const usernameInput = document.querySelector('#username')
+let color = parseInt(localStorage.getItem('color')) || 0
+let eyes = parseInt(localStorage.getItem('eyes')) || 0
+let mouth = parseInt(localStorage.getItem('mouth')) || 0
 
 const updateBall = () => {
-    ballPreview.style.backgroundColor = COLORS[colorIndex]
-    localStorage.setItem('color', COLORS[colorIndex])
+    localStorage.setItem('color', color)
+    localStorage.setItem('eyes', eyes)
+    localStorage.setItem('mouth', mouth)
+    renderHtmlBall(document.querySelector('#ball-preview'), color, eyes, mouth, 3)
 }
+updateBall()
 
 document.querySelector('#color-left').addEventListener('click', () => {
-    colorIndex = (colorIndex - 1 + COLORS.length) % COLORS.length
+    color = (color - 1 + AVATAR_COLORS) % AVATAR_COLORS
     updateBall()
 })
 document.querySelector('#color-right').addEventListener('click', () => {
-    colorIndex = (colorIndex + 1) % COLORS.length
+    color = (color + 1) % AVATAR_COLORS
+    updateBall()
+})
+document.querySelector('#eyes-left').addEventListener('click', () => {
+    eyes = (eyes - 1 + AVATAR_EYES) % AVATAR_EYES
+    updateBall()
+})
+document.querySelector('#eyes-right').addEventListener('click', () => {
+    eyes = (eyes + 1) % AVATAR_EYES
+    updateBall()
+})
+document.querySelector('#mouth-left').addEventListener('click', () => {
+    mouth = (mouth - 1 + AVATAR_MOUTHS) % AVATAR_MOUTHS
+    updateBall()
+})
+document.querySelector('#mouth-right').addEventListener('click', () => {
+    mouth = (mouth + 1) % AVATAR_MOUTHS
     updateBall()
 })
 
+const usernameInput = document.querySelector('#username')
+
 usernameInput.addEventListener('input', () => {
-    localStorage.setItem('name', usernameInput.value)
+    localStorage.setItem('username', usernameInput.value)
 })
 
-// restore from localStorage
-const savedColor = localStorage.getItem('color')
-if (savedColor) {
-    colorIndex = COLORS.indexOf(savedColor)
-    if (colorIndex === -1) colorIndex = 0
-}
-usernameInput.value = localStorage.getItem('name') || ''
-updateBall()
+usernameInput.value = localStorage.getItem('username') || ''
+
+document.querySelector('button#join-room').addEventListener('click', () => {
+    showView('rooms')
+})
 
 document.querySelector('button#join-room').addEventListener('click', (e) => {
     showView('rooms')

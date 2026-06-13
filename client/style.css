@@ -8,18 +8,15 @@ canvas {
     display: block;
     object-fit: contain;
     background-color: var(--canvas-bg);
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
 }
 
 body {
     margin: 0;
 }
 
-.ball-preview {
-    width: 80px;
-    height: 80px;
-    border-radius: 50%;
-    display: inline-block;
-}
+
 
 .customization {
     display: flex;

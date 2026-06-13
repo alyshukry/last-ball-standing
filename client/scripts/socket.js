@@ -3,7 +3,7 @@ import { showView, API_URL } from './main.js'
 
 export let ws
 
-export const connectToRoom = (room, token = null, password = null, color, username) => {
+export const connectToRoom = (room, token = null, password = null, color, eyes, mouth, username) => {
     const wsProtocol = window.location.protocol === 'https:' ? 'wss://' : 'ws://'
     ws = new WebSocket(wsProtocol + '//' + API_URL)
     setUpWs(ws)
@@ -16,6 +16,8 @@ export const connectToRoom = (room, token = null, password = null, color, userna
             token,
             password,
             color,
+            eyes,
+            mouth,
             username
         }))
     }

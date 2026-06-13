@@ -14,8 +14,12 @@
         <div class="customization">
             <div class="arrows">
                 <button class="arrow" id="color-left">‹</button>
+                <button class="arrow" id="eyes-left">‹</button>
+                <button class="arrow" id="mouth-left">‹</button>
                 <div class="ball-preview" id="ball-preview"></div>
                 <button class="arrow" id="color-right">›</button>
+                <button class="arrow" id="eyes-right">›</button>
+                <button class="arrow" id="mouth-right">›</button>
             </div>
         </div>
         <button id="join-room">Play!</button>
@@ -32,6 +36,11 @@
     </div>
     <div class="view" id="game">
         <div id="win-screen" style="display:none">
+            <div class="ball-winner" id="ball-winner">
+                <div id="winner-color"></div>
+                <div id="winner-eyes"></div>
+                <div id="winner-mouth"></div>
+            </div>
             <h1 id="win-text"></h1>
         </div>
         <canvas id="game" width="2000" height="1000"></canvas>
@@ -43,6 +52,7 @@
     <script src="./scripts//views/home.js" type="module"></script>
     <script src="./scripts//views/lobby.js" type="module"></script>
     <script src="./scripts//views/rooms.js" type="module"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gifler@0.1.0/gifler.min.js"></script>
 </body>
 
 </html>

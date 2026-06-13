@@ -56,7 +56,9 @@ export const joinRoom = (id, token = null, password = null) => {
         id,
         token,
         password,
-        localStorage.getItem('color') || 'rgb(255, 0, 255)',
-        localStorage.getItem('name') || 'guest'
+        localStorage.getItem('color') || 0,
+        localStorage.getItem('eyes') || 0,
+        localStorage.getItem('mouth') || 0,
+        localStorage.getItem('username') || 'guest'
     )
 }

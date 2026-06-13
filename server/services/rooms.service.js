@@ -55,7 +55,7 @@ const serialize = (room) => ({
 
 export const getFullRoom = (id) => rooms.get(id)
 
-export const addPlayerToRoom = (roomId, playerId, password, color, username) => {
+export const addPlayerToRoom = (roomId, playerId, password, color, eyes, mouth, username) => {
     const room = rooms.get(roomId)
 
     if (!room) return 'room_not_found'
@@ -67,6 +67,8 @@ export const addPlayerToRoom = (roomId, playerId, password, color, username) => 
         Math.floor(Math.random() * 1000),
         300,
         color,
+        eyes,
+        mouth,
         username
     )
 

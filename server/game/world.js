@@ -50,7 +50,7 @@ export const buildArena = (room, index) => {
     }
 }
 
-export const addPlayer = (room, id, x, y, color, username) => {
+export const addPlayer = (room, id, x, y, color, eyes, mouth, username) => {
     const ball = Bodies.circle(x, y, BALL_RADIUS, { restitution: 1, frictionAir: 0.0005, friction: 0 })
     ball.player = id
     World.add(room.physics.engine.world, ball)
@@ -58,6 +58,8 @@ export const addPlayer = (room, id, x, y, color, username) => {
     room.players.set(id, {
         id,
         color,
+        eyes, 
+        mouth,
         username,
         ball,
         dead: true

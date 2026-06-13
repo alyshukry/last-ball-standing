@@ -1,11 +1,36 @@
 import { state } from '../state.js'
 import { ws } from '../socket.js'
 import { on } from '../events.js'
+import { renderHtmlBall } from '../main.js'
 
 const canvas = document.querySelector('canvas#game')
 const ctx = canvas.getContext('2d')
+ctx.imageSmoothingEnabled = false
 
 let t = 0
+let atlasFrame = 0
+
+// toggle animation frame every 500ms
+setInterval(() => { atlasFrame = atlasFrame === 0 ? 1 : 0 }, 250)
+
+const loadImage = (src) => {
+    const img = new Image()
+    img.src = src
+    return img
+}
+
+const atlases = {
+    colors: [loadImage('/assets/avatar/colors0.png'), loadImage('/assets/avatar/colors1.png')],
+    eyes: [loadImage('/assets/avatar/eyes0.png'), loadImage('/assets/avatar/eyes1.png')],
+    mouths: [loadImage('/assets/avatar/mouths0.png'), loadImage('/assets/avatar/mouths1.png')],
+}
+
+const drawSprite = (atlas, index, x, y) => {
+    const img = atlases[atlas][atlasFrame]
+    const col = index % 4
+    const row = Math.floor(index / 4)
+    ctx.drawImage(img, col * 64, row * 64, 64, 64, x - 32, y - 32, 64, 64)
+}
 
 function renderBody(body) {
     ctx.save()
@@ -55,23 +80,23 @@ function render() {
         const prev = state.prevState.players?.[id]
         const x = prev ? prev.x + (player.x - prev.x) * t : player.x
         const y = prev ? prev.y + (player.y - prev.y) * t : player.y
+        const info = state.playersInfo[id]
+        if (!info) continue
 
-        // triangle indicator
+        // triangle indicator for own ball
         if (id === state.myId) {
             ctx.beginPath()
             ctx.moveTo(x, y - 35)
             ctx.lineTo(x - 6, y - 45)
             ctx.lineTo(x + 6, y - 45)
             ctx.closePath()
-            ctx.fillStyle = state.playersInfo[id]?.color ?? 'white'
+            ctx.fillStyle = 'white'
             ctx.fill()
         }
 
-        // ball
-        ctx.beginPath()
-        ctx.arc(x, y, 25, 0, Math.PI * 2)
-        ctx.fillStyle = state.playersInfo[id]?.color ?? 'black'
-        ctx.fill()
+        drawSprite('colors', info.color ?? 0, x, y)
+        drawSprite('eyes', info.eyes ?? 0, x, y)
+        drawSprite('mouths', info.mouth ?? 0, x, y)
     }
 
     ctx.restore()
@@ -100,10 +125,12 @@ const winScreen = document.querySelector('#win-screen')
 const winText = document.querySelector('#win-text')
 
 on('round_end', (data) => {
-    winText.textContent = state.playersInfo[data.winner].username + ' wins'
+    const winner = state.playersInfo[data.winner]
+
+    renderHtmlBall(document.querySelector('#ball-winner'), winner?.color, winner?.eyes, winner?.mouth, 5)
+
+    winText.textContent = state.playersInfo[data.winner]?.username + ' wins'
     winScreen.style.display = 'flex'
 })
 
-on('round_start', () => {
-    winScreen.style.display = 'none'
-})
+on('round_start', () => { winScreen.style.display = 'none' })
