@@ -23,6 +23,7 @@ export const setUpRoom = (room) => {
         }
     })
     buildArena(room, 0)
+    room.physics.engine.gravity.y = 1.5
 }
 
 export const buildArena = (room, index) => {

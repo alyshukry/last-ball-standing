@@ -29,7 +29,7 @@ const drawSprite = (atlas, index, x, y) => {
     const img = atlases[atlas][atlasFrame]
     const col = index % 4
     const row = Math.floor(index / 4)
-    ctx.drawImage(img, col * 64, row * 64, 64, 64, x - 32, y - 32, 64, 64)
+    ctx.drawImage(img, col * 64, row * 64, 64, 64, x - 24, y - 24, 48, 48)
 }
 
 function renderBody(body) {
