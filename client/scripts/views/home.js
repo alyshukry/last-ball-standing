@@ -1,9 +1,9 @@
 import { showView, API_URL, renderHtmlBall, AVATAR_COLORS, AVATAR_EYES, AVATAR_MOUTHS } from '../main.js'
 import { joinRoom } from '../views/rooms.js'
 
-let color = parseInt(localStorage.getItem('color')) || 0
-let eyes = parseInt(localStorage.getItem('eyes')) || 0
-let mouth = parseInt(localStorage.getItem('mouth')) || 0
+let color = parseInt(localStorage.getItem('color')) || Math.floor(Math.random() * AVATAR_COLORS)
+let eyes = parseInt(localStorage.getItem('eyes')) || Math.floor(Math.random() * AVATAR_EYES)
+let mouth = parseInt(localStorage.getItem('mouth')) || Math.floor(Math.random() * AVATAR_MOUTHS)
 
 const updateBall = () => {
     localStorage.setItem('color', color)

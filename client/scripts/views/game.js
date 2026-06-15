@@ -32,6 +32,18 @@ const drawSprite = (atlas, index, x, y) => {
     ctx.drawImage(img, col * 64, row * 64, 64, 64, x - 24, y - 24, 48, 48)
 }
 
+const rectTiles = loadImage('../../assets/arena/rect.png')
+const circleSprites = {
+    8: loadImage('/assets/arena/circle8.png'),
+    12: loadImage('/assets/arena/circle12.png'),
+    16: loadImage('/assets/arena/circle16.png'),
+    20: loadImage('/assets/arena/circle20.png'),
+    24: loadImage('/assets/arena/circle24.png'),
+    28: loadImage('/assets/arena/circle28.png'),
+    32: loadImage('/assets/arena/circle32.png'),
+    40: loadImage('/assets/arena/circle40.png'),
+}
+
 function renderBody(body) {
     ctx.save()
     ctx.translate(body.x, body.y)
@@ -39,25 +51,37 @@ function renderBody(body) {
     ctx.fillStyle = body.color || 'gray'
 
     switch (body.shape) {
-        case 'rect':
-            ctx.fillRect(-body.width / 2, -body.height / 2, body.width, body.height)
-            break
-        case 'circle':
-            ctx.beginPath()
-            ctx.arc(0, 0, body.radius, 0, Math.PI * 2)
-            ctx.fill()
-            break
-        case 'polygon':
-            ctx.rotate((body.options.angle || 0) + Math.PI / body.sides)
-            ctx.beginPath()
-            for (let i = 0; i < body.sides; i++) {
-                const angle = (i / body.sides) * Math.PI * 2
-                const px = Math.cos(angle) * body.radius
-                const py = Math.sin(angle) * body.radius
-                i === 0 ? ctx.moveTo(px, py) : ctx.lineTo(px, py)
+        case 'rect': {
+            const T = 6 // tile size
+            const w = body.width
+            const h = body.height
+
+            const drawTile = (sx, sy, dx, dy, dw, dh) => {
+                ctx.drawImage(rectTiles, sx, sy, T, T, dx, dy, dw, dh)
             }
-            ctx.closePath()
-            ctx.fill()
+
+            const x = -w / 2
+            const y = -h / 2
+
+            // corners
+            drawTile(0, 0, x, y, T, T) // top-left
+            drawTile(T * 2, 0, x + w - T, y, T, T) // top-right
+            drawTile(0, T * 2, x, y + h - T, T, T) // bottom-left
+            drawTile(T * 2, T * 2, x + w - T, y + h - T, T, T) // bottom-right
+
+            // edges (stretched)
+            drawTile(T, 0, x + T, y, w - T * 2, T) // top
+            drawTile(T, T * 2, x + T, y + h - T, w - T * 2, T) // bottom
+            drawTile(0, T, x, y + T, T, h - T * 2) // left
+            drawTile(T * 2, T, x + w - T, y + T, T, h - T * 2) // right
+
+            // center
+            drawTile(T, T, x + T, y + T, w - T * 2, h - T * 2)
+            break
+        }
+        case 'circle':
+            const img = circleSprites[body.radius]
+            if (img) ctx.drawImage(img, -body.radius, -body.radius)
             break
     }
 
