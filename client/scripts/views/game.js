@@ -48,7 +48,6 @@ function renderBody(body) {
     ctx.save()
     ctx.translate(body.x, body.y)
     ctx.rotate(body.options.angle || 0)
-    ctx.fillStyle = body.color || 'gray'
 
     switch (body.shape) {
         case 'rect': {
@@ -91,9 +90,10 @@ function renderBody(body) {
 function render() {
     t = Math.min((Date.now() - state.lastUpdate) / (1000 / 30), 1)
 
-    const canvasBg = getComputedStyle(document.documentElement).getPropertyValue('--canvas-bg').trim()
-    ctx.fillStyle = canvasBg
-    ctx.fillRect(0, 0, canvas.width, canvas.height)
+    // const canvasBg = getComputedStyle(document.documentElement).getPropertyValue('--canvas-bg').trim()
+    // ctx.fillStyle = canvasBg
+    // ctx.fillRect(0, 0, canvas.width, canvas.height)
+    ctx.clearRect(0, 0, canvas.width, canvas.height)
 
     ctx.save()
     ctx.scale(2, 2)

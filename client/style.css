@@ -1,22 +1,19 @@
-:root {
-    --canvas-bg: white;
-}
-
 canvas {
     width: 100vw;
     height: 100vh;
     display: block;
     object-fit: contain;
-    background-color: var(--canvas-bg);
     image-rendering: pixelated;
     image-rendering: crisp-edges;
 }
 
 body {
     margin: 0;
+    background-color: #123d86;
+    background-image: linear-gradient(45deg, #133f8c 25%, transparent 25%, transparent 75%, #133f8c 75%), linear-gradient(45deg, #133f8c 25%, transparent 25%, transparent 75%, #133f8c 75%);
+    background-size: 128px 128px;
+    background-position: 0 0, 64px 64px;
 }
-
-
 
 .customization {
     display: flex;

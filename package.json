@@ -2,7 +2,7 @@
     "name": "last-ball-standing",
     "version": "1.0.0",
     "description": "",
-    "main": "index.js",
+    "main": "server/index.js",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
         "dev": "node server/index.js",
@@ -25,5 +25,8 @@
         "express": "^5.2.1",
         "matter-js": "^0.20.0",
         "ws": "^8.21.0"
+    },
+    "devDependencies": {
+        "nodemon": "^3.1.14"
     }
 }

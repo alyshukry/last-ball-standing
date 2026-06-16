@@ -88,7 +88,8 @@ export const killPlayer = (room, id) => {
 export const revivePlayer = (room, id, playerIndex) => {
     const player = room.players.get(id)
     const arena = room.arenas[room.round.number % room.arenas.length]
-    const spawn = arena.spawns[playerIndex % arena.spawns.length]
+    const start = Math.floor(Math.random() * arena.spawns.length)
+    const spawn = arena.spawns[(playerIndex + start) % arena.spawns.length]
     const offset = Math.floor(playerIndex / arena.spawns.length) * 60
 
     Body.setVelocity(player.ball, { x: 0, y: 0 })
