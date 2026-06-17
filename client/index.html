@@ -6,34 +6,44 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Last Ball Standing!</title>
     <link rel="stylesheet" href="./styles/main.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cause:wght@100..900&display=swap" rel="stylesheet">
 </head>
 
-<body style="display: none;">
-    <main class="view" id="home">
-        <input type="text" id="username" placeholder="Enter your name">
-        <div id="avatar-customization">
-            <div class="arrows">
-                <button class="arrow left color">‹</button>
-                <button class="arrow left eyes">‹</button>
-                <button class="arrow left mouth">‹</button>
+<body>
+    <main class="view hidden" id="home">
+        <div id="setup-panel">
+            <input type="text" id="username" placeholder="Enter your name">
+            <div id="avatar-customization">
+                <div class="arrows">
+                    <button class="arrow left eyes">‹</button>
+                    <button class="arrow left mouth">‹</button>
+                    <button class="arrow left color">‹</button>
+                </div>
                 <div class="ball-preview" id="ball-preview"></div>
-                <button class="arrow right color">›</button>
-                <button class="arrow right eyes">›</button>
-                <button class="arrow right mouth">›</button>
+                <div class="arrows">
+                    <button class="arrow right eyes">›</button>
+                    <button class="arrow right mouth">›</button>
+                    <button class="arrow right color">›</button>
+                </div>
+                <button id="random">random</button>
+            </div>
+            <div id="join-buttons">
+                <button id="join-room">Play!</button>
+                <button id="create-room">Create room</button>
             </div>
         </div>
-        <button id="join-room">Play!</button>
-        <button id="create-room">Create room</button>
     </main>
-    <main class="view" id="rooms">
+    <main class="view hidden" id="rooms">
         <h1>Rooms</h1>
         <ul id="rooms-list"></ul>
     </main>
-    <main class="view" id="lobby">
+    <main class="view hidden" id="lobby">
         <ul id="players-list"></ul>
     </main>
-    <main class="view" id="game">
-        <div id="win-screen" style="display:none">
+    <main class="view hidden" id="game">
+        <div id="win-screen" class="hidden">
             <div id="winner-avatar"></div>
             <h1></h1>
         </div>
