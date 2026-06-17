@@ -13,29 +13,19 @@ const updateBall = () => {
 }
 updateBall()
 
-document.querySelector('#color-left').addEventListener('click', () => {
-    color = (color - 1 + AVATAR_COLORS) % AVATAR_COLORS
-    updateBall()
-})
-document.querySelector('#color-right').addEventListener('click', () => {
-    color = (color + 1) % AVATAR_COLORS
-    updateBall()
-})
-document.querySelector('#eyes-left').addEventListener('click', () => {
-    eyes = (eyes - 1 + AVATAR_EYES) % AVATAR_EYES
-    updateBall()
-})
-document.querySelector('#eyes-right').addEventListener('click', () => {
-    eyes = (eyes + 1) % AVATAR_EYES
-    updateBall()
-})
-document.querySelector('#mouth-left').addEventListener('click', () => {
-    mouth = (mouth - 1 + AVATAR_MOUTHS) % AVATAR_MOUTHS
-    updateBall()
-})
-document.querySelector('#mouth-right').addEventListener('click', () => {
-    mouth = (mouth + 1) % AVATAR_MOUTHS
-    updateBall()
+document.querySelectorAll('.arrow').forEach((button) => {
+    button.addEventListener('click', () => {
+        const delta = button.classList.contains('left') ? -1 : 1
+
+        if (button.classList.contains('color'))
+            color = (color + delta + AVATAR_COLORS) % AVATAR_COLORS
+        if (button.classList.contains('eyes'))
+            eyes = (eyes + delta + AVATAR_EYES) % AVATAR_EYES
+        if (button.classList.contains('mouth'))
+            mouth = (mouth + delta + AVATAR_MOUTHS) % AVATAR_MOUTHS
+
+        updateBall()
+    })
 })
 
 const usernameInput = document.querySelector('#username')

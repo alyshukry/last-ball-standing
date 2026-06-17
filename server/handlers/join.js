@@ -1,3 +1,4 @@
+import { WORLD_HEIGHT, WORLD_WIDTH } from '../game/constants.js'
 import { addPlayerToRoom, getFullRoom, verifyOwnerToken } from '../services/rooms.service.js'
 import { getSocketServer } from '../socket.js'
 import { send } from '../utils/socket.js'
@@ -10,14 +11,14 @@ export const handleJoin = (ws, data) => {
     ws.token = data.token
     if (data.token) {
         const isOwner = verifyOwnerToken(ws.room, ws.id, data.token)
-        if (!isOwner) send(ws, { type:'ownership_error', error: 'Incorrect room token' })
+        if (!isOwner) send(ws, { type: 'ownership_error', error: 'Incorrect room token' })
     }
 
     const playerJoin = addPlayerToRoom(ws.room, ws.id, data.password || null, data.color, data.eyes, data.mouth, data.username)
 
     switch (playerJoin) {
         case 'ok':
-            send(ws, { type: 'joined', id: ws.id, room: ws.room, color: data.color, eyes: data.eyes, mouth: data.mouth, username: data.username })
+            send(ws, { type: 'joined', id: ws.id, room: ws.room, color: data.color, eyes: data.eyes, mouth: data.mouth, username: data.username, world_dimensions: { width: WORLD_WIDTH, height: WORLD_HEIGHT } })
 
             for (const client of getSocketServer().clients)
                 if (client.room === ws.room) send(client, { type: 'player_info', id: ws.id, color: data.color, eyes: data.eyes, mouth: data.mouth, username: data.username })

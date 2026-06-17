@@ -6,7 +6,8 @@ export const state = {
     playersInfo: {},
     lastUpdate: Date.now(),
     arena: [],
-    myId: null
+    myId: null,
+    worldDimensions: { width: 1000, height: 500 }
 }
 
 on('state', (data) => {
@@ -19,4 +20,7 @@ on('player_info', (data) => { state.playersInfo[data.id] = { id: data.id, color:
 
 on('arena', (data) => { state.arena = data.bodies })
 
-on('joined', (data) => { state.myId = data.id; console.log(data); console.log(state) })
+on('joined', (data) => {
+    state.myId = data.id
+    state.worldDimensions = data.world_dimensions
+})

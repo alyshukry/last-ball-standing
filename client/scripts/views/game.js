@@ -3,7 +3,7 @@ import { ws } from '../socket.js'
 import { on } from '../events.js'
 import { renderHtmlBall } from '../main.js'
 
-const canvas = document.querySelector('canvas#game')
+const canvas = document.querySelector('#game-canvas')
 const ctx = canvas.getContext('2d')
 ctx.imageSmoothingEnabled = false
 
@@ -96,7 +96,7 @@ function render() {
     ctx.clearRect(0, 0, canvas.width, canvas.height)
 
     ctx.save()
-    ctx.scale(2, 2)
+    ctx.scale(canvas.width / state.worldDimensions.width, canvas.height / state.worldDimensions.height)
 
     for (const body of state.arena) renderBody(body)
 
@@ -146,12 +146,12 @@ window.addEventListener('keydown', (e) => { if (keyMap[e.key.toLowerCase()]) key
 window.addEventListener('keyup', (e) => keysPressed.delete(e.key.toLowerCase()))
 
 const winScreen = document.querySelector('#win-screen')
-const winText = document.querySelector('#win-text')
-
+const winText = document.querySelector('#win-screen h1')
+const winnerAvatar = document.querySelector('#winner-avatar')
 on('round_end', (data) => {
     const winner = state.playersInfo[data.winner]
 
-    renderHtmlBall(document.querySelector('#ball-winner'), winner?.color, winner?.eyes, winner?.mouth, 5)
+    renderHtmlBall(winnerAvatar, winner?.color, winner?.eyes, winner?.mouth, 5)
 
     winText.textContent = state.playersInfo[data.winner]?.username + ' wins'
     winScreen.style.display = 'flex'
