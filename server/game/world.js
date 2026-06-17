@@ -59,7 +59,7 @@ export const addPlayer = (room, id, x, y, color, eyes, mouth, username) => {
     room.players.set(id, {
         id,
         color,
-        eyes, 
+        eyes,
         mouth,
         username,
         ball,
@@ -81,6 +81,7 @@ export const killPlayer = (room, id) => {
 
     player.dead = true
 
+    Body.setVelocity(player.ball, { x: 0, y: 0 })
     Body.setStatic(player.ball, true)
     Body.setPosition(player.ball, { x: -1000, y: -1000 })
 }
