@@ -13,7 +13,7 @@ export const showView = (view) => {
 showView('home')
 document.querySelector('body').style.display = 'flex'
 
-const SPRITE_SIZE = 32
+const SPRITE_SIZE = 64
 const ATLAS_WIDTH = 4
 const ATLAS_HEIGHT = 8
 export const AVATAR_COLORS = 14
@@ -49,15 +49,64 @@ export const renderHtmlBall = (container, color, eyes, mouth, scale = 1) => {
     const colorCol = color % 4
     const colorRow = Math.floor(color / 4)
     colorElement.style.backgroundPosition =
-        `-${colorCol * 32 * scale}px -${colorRow * 32 * scale}px`
+        `-${colorCol * SPRITE_SIZE * scale}px -${colorRow * SPRITE_SIZE * scale}px`
 
     const eyesCol = eyes % 4
     const eyesRow = Math.floor(eyes / 4)
     eyesElement.style.backgroundPosition =
-        `-${eyesCol * 32 * scale}px -${eyesRow * 32 * scale}px`
+        `-${eyesCol * SPRITE_SIZE * scale}px -${eyesRow * SPRITE_SIZE * scale}px`
 
     const mouthCol = mouth % 4
     const moutRow = Math.floor(mouth / 4)
     mouthElement.style.backgroundPosition =
-        `-${mouthCol * 32 * scale}px -${moutRow * 32 * scale}px`
+        `-${mouthCol * SPRITE_SIZE * scale}px -${moutRow * SPRITE_SIZE * scale}px`
 }
+
+const setRandomFavicon = () => {
+    const colorIndex = Math.floor(Math.random() * AVATAR_COLORS)
+    const eyesIndex = Math.floor(Math.random() * AVATAR_EYES)
+    const mouthIndex = Math.floor(Math.random() * AVATAR_MOUTHS)
+
+    const colorsImg = new Image()
+    const eyesImg = new Image()
+    const mouthsImg = new Image()
+
+    colorsImg.src = '/assets/avatar/colors0.png'
+    eyesImg.src = '/assets/avatar/eyes0.png'
+    mouthsImg.src = '/assets/avatar/mouths0.png'
+
+    let loaded = 0
+    const onLoad = () => {
+        loaded++
+        if (loaded < 3) return
+
+        const canvas = document.createElement('canvas')
+        canvas.width = SPRITE_SIZE
+        canvas.height = SPRITE_SIZE
+        const ctx = canvas.getContext('2d')
+
+        const draw = (img, index) => {
+            const col = index % 4
+            const row = Math.floor(index / 4)
+            ctx.drawImage(img, col * SPRITE_SIZE, row * SPRITE_SIZE, SPRITE_SIZE, SPRITE_SIZE, 0, 0, SPRITE_SIZE, SPRITE_SIZE)
+        }
+
+        draw(colorsImg, colorIndex)
+        draw(eyesImg, eyesIndex)
+        draw(mouthsImg, mouthIndex)
+
+        let link = document.querySelector('link[rel="icon"]')
+        if (!link) {
+            link = document.createElement('link')
+            link.rel = 'icon'
+            document.head.appendChild(link)
+        }
+        link.href = canvas.toDataURL('image/png')
+    }
+
+    colorsImg.onload = onLoad
+    eyesImg.onload = onLoad
+    mouthsImg.onload = onLoad
+}
+
+setRandomFavicon()

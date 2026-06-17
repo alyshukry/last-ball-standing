@@ -9,7 +9,7 @@ const updateBall = () => {
     localStorage.setItem('color', color)
     localStorage.setItem('eyes', eyes)
     localStorage.setItem('mouth', mouth)
-    renderHtmlBall(document.querySelector('#ball-preview'), color, eyes, mouth, 3)
+    renderHtmlBall(document.querySelector('#ball-preview'), color, eyes, mouth, 2)
 }
 updateBall()
 
