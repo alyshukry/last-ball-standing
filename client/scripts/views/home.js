@@ -11,6 +11,7 @@ const updateBall = () => {
     localStorage.setItem('mouth', mouth)
     renderHtmlBall(document.querySelector('#ball-preview'), color, eyes, mouth, 2)
 }
+
 updateBall()
 
 document.querySelectorAll('.arrow').forEach((button) => {
@@ -28,6 +29,13 @@ document.querySelectorAll('.arrow').forEach((button) => {
     })
 })
 
+document.querySelector('button#random').addEventListener('click', () => {
+    color = Math.floor(Math.random() * AVATAR_COLORS)
+    eyes = Math.floor(Math.random() * AVATAR_EYES)
+    mouth = Math.floor(Math.random() * AVATAR_MOUTHS)
+    updateBall()
+})
+
 const usernameInput = document.querySelector('#username')
 
 usernameInput.addEventListener('input', () => {
@@ -37,10 +45,6 @@ usernameInput.addEventListener('input', () => {
 usernameInput.value = localStorage.getItem('username') || ''
 
 document.querySelector('button#join-room').addEventListener('click', () => {
-    showView('rooms')
-})
-
-document.querySelector('button#join-room').addEventListener('click', (e) => {
     showView('rooms')
 })
 

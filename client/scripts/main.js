@@ -5,13 +5,11 @@ export const API_URL = window.location.hostname === 'localhost'
 const views = ['home', 'rooms', 'lobby', 'game']
 
 export const showView = (view) => {
-    views.forEach(v => document.querySelector(`.view#${v}`).style.display = 'none')
-    document.querySelector(`.view#${view}`).style.display = 'block'
+    views.forEach(v => document.querySelector(`.view#${v}`).classList.add('hidden'))
+    document.querySelector(`.view#${view}`).classList.remove('hidden')
 }
 
-//init
 showView('home')
-document.querySelector('body').style.display = 'flex'
 
 const SPRITE_SIZE = 64
 const ATLAS_WIDTH = 4
