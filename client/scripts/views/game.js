@@ -87,12 +87,11 @@ function renderBody(body) {
     ctx.restore()
 }
 
+let animationId = null
+
 function render() {
     t = Math.min((Date.now() - state.lastUpdate) / (1000 / 30), 1)
 
-    // const canvasBg = getComputedStyle(document.documentElement).getPropertyValue('--canvas-bg').trim()
-    // ctx.fillStyle = canvasBg
-    // ctx.fillRect(0, 0, canvas.width, canvas.height)
     ctx.clearRect(0, 0, canvas.width, canvas.height)
 
     ctx.save()
@@ -126,7 +125,9 @@ function render() {
     ctx.restore()
     requestAnimationFrame(render)
 }
-render()
+
+export const startRender = () => { render() }
+export const stopRender = () => { cancelAnimationFrame(animationId) }
 
 const keyMap = { w: true, a: true, s: true, d: true }
 const keysPressed = new Set()
@@ -157,4 +158,9 @@ on('round_end', (data) => {
     winScreen.style.display = 'flex'
 })
 
-on('round_start', () => { winScreen.style.display = 'none' })
+on('round_start', () => {
+    winScreen.style.display = 'none'
+    startRender()
+})
+
+on('back_to_lobby', () => stopRender())
