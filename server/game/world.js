@@ -112,5 +112,5 @@ export const applyInput = (room, id, x, y) => {
 }
 
 export const update = (room) => {
-    Engine.update(room.physics.engine, 1000 / 90)
+    Engine.update(room.physics.engine, 1000 / 110)
 }
