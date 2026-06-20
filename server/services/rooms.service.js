@@ -20,6 +20,7 @@ export const createRoom = ({ name, password, arenas }) => {
         token,
         arenas,
         players: new Map(),
+        inactivityTimeout: null,
         round: {
             status: 'LOBBY',
             number: 0,
@@ -78,6 +79,9 @@ export const addPlayerToRoom = (roomId, playerId, password, color, eyes, mouth, 
             room.round.lobbyTimeout = null
         }, 5000)
 
+    if (room.players.size >= 1)
+        clearTimeout(room.inactivityTimeout)
+
     return 'ok'
 }
 
@@ -94,12 +98,16 @@ export const removePlayerFromRoom = (roomId, playerId) => {
         id: playerId
     })
 
-    if (room.players.size <= 1 && room.round.lobbyTimeout) {
+    if (room.players.size === 1 && room.round.lobbyTimeout) {
         clearTimeout(room.round.lobbyTimeout)
         room.round.lobbyTimeout = null
 
         return
     }
+
+    if (room.players.size === 0)
+        room.inactivityTimeout = setTimeout(() => { deleteRoom(roomId) }, 5 * 60 * 1000)
+
     checkRound(room)
 }
 

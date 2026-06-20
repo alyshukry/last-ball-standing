@@ -129,7 +129,7 @@ function render() {
 export const startRender = () => { render() }
 export const stopRender = () => { cancelAnimationFrame(animationId) }
 
-const keyMap = { w: true, a: true, s: true, d: true }
+const keyMap = { w: true, a: true, s: true, d: true, ' ': true }
 const keysPressed = new Set()
 
 setInterval(() => {
@@ -143,7 +143,13 @@ setInterval(() => {
         ws.send(JSON.stringify({ type: 'input', x, y }))
 }, 1000 / 60)
 
-window.addEventListener('keydown', (e) => { if (keyMap[e.key.toLowerCase()]) keysPressed.add(e.key.toLowerCase()) })
+window.addEventListener('keydown', (e) => {
+    const key = e.key.toLowerCase()
+    if (keyMap[key]) keysPressed.add(key)
+    if (key === ' ') {
+        ws.send(JSON.stringify({ type: 'input', move: 'jump' }))
+    }
+})
 window.addEventListener('keyup', (e) => keysPressed.delete(e.key.toLowerCase()))
 
 const winScreen = document.querySelector('#win-screen')
@@ -155,11 +161,11 @@ on('round_end', (data) => {
     renderHtmlBall(winnerAvatar, winner?.color, winner?.eyes, winner?.mouth, 5)
 
     winText.textContent = state.playersInfo[data.winner]?.username + ' wins'
-    winScreen.style.display = 'flex'
+    winScreen.classList.remove('hidden')
 })
 
 on('round_start', () => {
-    winScreen.style.display = 'none'
+    winScreen.classList.add('hidden')
     startRender()
 })
 

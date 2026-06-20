@@ -16,7 +16,14 @@ const renderPlayers = () => {
     }
 }
 
-on('joined', () => { showView('lobby'); renderPlayers() })
+on('joined', () => {
+    showView('lobby')
+    renderPlayers()
+})
 on('player_info', () => renderPlayers())
-on('back_to_lobby', () => { showView('lobby'); renderPlayers() })
+on('player_left', () => renderPlayers())
+on('back_to_lobby', () => {
+    showView('lobby')
+    renderPlayers()
+})
 on('round_start', () => showView('game'))

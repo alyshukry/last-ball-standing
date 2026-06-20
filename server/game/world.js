@@ -11,17 +11,19 @@ export const setUpRoom = (room) => {
             const { bodyA, bodyB, collision } = pair
             const normal = collision.normal
 
-            if (bodyA.isStatic && normal.y > -0.5) room.physics.grounded.add(bodyB.player)
-            if (bodyB.isStatic && normal.y < 0.5) room.physics.grounded.add(bodyA.player)
+            // If one body is static (ground) and the other is a player ball, allow that player to jump.
+            if (bodyA.isStatic && bodyB.player !== undefined) {
+                const p = room.players.get(bodyB.player)
+                if (p && normal.y > -0.5) p.canJump = true
+            }
+
+            if (bodyB.isStatic && bodyA.player !== undefined) {
+                const p = room.players.get(bodyA.player)
+                if (p && normal.y < 0.5) p.canJump = true
+            }
         }
     })
-    Events.on(room.physics.engine, 'collisionEnd', (e) => {
-        for (const pair of e.pairs) {
-            const { bodyA, bodyB } = pair
-            if (bodyA.isStatic) room.physics.grounded.delete(bodyB.player)
-            if (bodyB.isStatic) room.physics.grounded.delete(bodyA.player)
-        }
-    })
+
     buildArena(room, 0)
     room.physics.engine.gravity.y = 1.5
 }
@@ -63,7 +65,8 @@ export const addPlayer = (room, id, x, y, color, eyes, mouth, username) => {
         mouth,
         username,
         ball,
-        dead: true
+        dead: true,
+        canJump: false
     })
 
     killPlayer(room, id)
@@ -101,14 +104,34 @@ export const revivePlayer = (room, id, playerIndex) => {
 }
 
 export const applyInput = (room, id, x, y) => {
-    const ball = room.players.get(id).ball
+    const player = room.players.get(id)
+    const ball = player.ball
     if (!ball) return
+
     if (x === 0 && y === 0) return
+
+    x = x > 0 ? 1 : -1
+    y = y > 0 ? 1 : -1
 
     Body.applyForce(ball, ball.position, {
         x: x * 0.00125,
-        y: y < 0 && room.physics.grounded.has(id) && Math.abs(ball.velocity.y) < 2.5 ? -0.05 : y * 0.001
+        y: y * 0.001
     })
+
+}
+
+export const applyMove = (room, id, move) => {
+    const player = room.players.get(id)
+    const ball = player.ball
+    if (!ball) return
+
+    if (move === 'jump' && player.canJump) {
+        Body.applyForce(ball, ball.position, {
+            x: 0,
+            y: -.125
+        })
+        player.canJump = false
+    }
 }
 
 export const update = (room) => {
