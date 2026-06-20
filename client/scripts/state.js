@@ -22,3 +22,5 @@ on('joined', (data) => {
     state.myId = data.id
     state.worldDimensions = data.world_dimensions
 })
+
+on('ownership_update', (data) => { console.log(data + '\n' + data.owner === state.myId ? 'yes' : 'no' + '\n' + data.owner + ' ' + state.myId) })
