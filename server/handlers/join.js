@@ -19,6 +19,7 @@ export const handleJoin = (ws, data) => {
     switch (playerJoin) {
         case 'ok':
             send(ws, { type: 'joined', id: ws.id, room: ws.room, color: data.color, eyes: data.eyes, mouth: data.mouth, username: data.username, world_dimensions: { width: WORLD_WIDTH, height: WORLD_HEIGHT } })
+            send(ws, { type: 'ownership_update', owner: getFullRoom(ws.room).owner })
 
             for (const client of getSocketServer().clients)
                 if (client.room === ws.room) send(client, { type: 'player_info', id: ws.id, color: data.color, eyes: data.eyes, mouth: data.mouth, username: data.username })

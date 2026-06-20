@@ -98,6 +98,14 @@ export const removePlayerFromRoom = (roomId, playerId) => {
         id: playerId
     })
 
+    if (playerId === room.owner) {
+        room.owner = room.players[0]
+        broadcastToRoom(roomId, {
+            type: 'ownership_update',
+            owner: room.owner
+        })
+    }
+
     if (room.players.size === 1 && room.round.lobbyTimeout) {
         clearTimeout(room.round.lobbyTimeout)
         room.round.lobbyTimeout = null
