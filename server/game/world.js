@@ -125,7 +125,7 @@ export const applyMove = (room, id, move) => {
     const ball = player.ball
     if (!ball) return
 
-    if (move === 'jump' && player.canJump) {
+    if (move === 'jump' && player.canJump && Math.abs(ball.velocity.y) < 25) {
         Body.applyForce(ball, ball.position, {
             x: 0,
             y: -.125
