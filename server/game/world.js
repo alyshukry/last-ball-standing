@@ -110,8 +110,8 @@ export const applyInput = (room, id, x, y) => {
 
     if (x === 0 && y === 0) return
 
-    x = x > 0 ? 1 : -1
-    y = y > 0 ? 1 : -1
+    x = x > 0 ? 1 : x < 0 ? -1 : 0
+    y = y > 0 ? 1 : y < 0 ? -1 : 0
 
     Body.applyForce(ball, ball.position, {
         x: x * 0.00125,
