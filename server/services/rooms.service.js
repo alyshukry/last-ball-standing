@@ -73,11 +73,11 @@ export const addPlayerToRoom = (roomId, playerId, password, color, eyes, mouth, 
         username
     )
 
-    if (room.round.status === 'LOBBY' && room.players.size === 2)
-        room.round.lobbyTimeout = setTimeout(() => {
-            startRound(room)
-            room.round.lobbyTimeout = null
-        }, 5000)
+    // if (room.round.status === 'LOBBY' && room.players.size === 2)
+    //     room.round.lobbyTimeout = setTimeout(() => {
+    //         startRound(room)
+    //         room.round.lobbyTimeout = null
+    //     }, 5000)
 
     if (room.players.size >= 1)
         clearTimeout(room.inactivityTimeout)

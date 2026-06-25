@@ -1,5 +1,6 @@
 import { on } from '../events.js'
 import { renderHtmlBall, showView } from '../main.js'
+import { ws } from '../socket.js'
 import { state } from '../state.js'
 
 const playerList = document.querySelector('#players-list')
@@ -8,11 +9,22 @@ const renderPlayers = () => {
     playerList.innerHTML = ''
     for (const [id, info] of Object.entries(state.playersInfo)) {
         const li = document.createElement('li')
-        li.textContent = info.username || 'guest'
+
         const ball = document.createElement('div')
-        li.appendChild(ball)
         renderHtmlBall(ball, info.color, info.eyes, info.mouth)
+
+        li.textContent = info.username || 'guest'
+        li.dataset.userId = id
+        li.appendChild(ball)
         playerList.appendChild(li)
+
+        if (li.dataset.userId !== state.myId)
+            li.addEventListener('click', () => {
+                ws.send(JSON.stringify({
+                    type: 'kick_player',
+                    player: id
+                }))
+            })
     }
 }
 
@@ -27,3 +39,10 @@ on('back_to_lobby', () => {
     renderPlayers()
 })
 on('round_start', () => showView('game'))
+
+on('ownership_update', (data) => {
+    const isOwner = state.myId === data.owner
+
+    const startGameButton = document.querySelector('button#start-game')
+    isOwner ? startGameButton.classList.remove('hidden') : startGameButton.classList.add('hidden')
+})

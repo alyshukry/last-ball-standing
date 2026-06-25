@@ -3,6 +3,7 @@ import { send, parse } from './utils/socket.js'
 import { handleInput } from './handlers/input.js'
 import { handleJoin } from './handlers/join.js'
 import { removePlayerFromRoom } from './services/rooms.service.js'
+import { handleKick } from './handlers/kick.js'
 
 let wss
 export const initSocket = (server) => {
@@ -19,6 +20,9 @@ export const initSocket = (server) => {
                     break
                 case 'input':
                     handleInput(ws, parsed)
+                    break
+                case 'kick_player':
+                    handleKick(ws, parsed)
                     break
             }
         })

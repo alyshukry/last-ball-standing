@@ -24,7 +24,7 @@ export const connectToRoom = (room, token = null, password = null, color, eyes, 
 }
 
 const setUpWs = (ws) => {
-    ws.onclose = () => console.log('bye')
+    ws.onclose = (e) => console.log('bye', e ? e : '')
     ws.onmessage = (e) => {
         const data = JSON.parse(e.data)
         emit(data.type, data)
