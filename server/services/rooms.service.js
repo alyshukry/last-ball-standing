@@ -99,7 +99,7 @@ export const removePlayerFromRoom = (roomId, playerId) => {
     })
 
     if (playerId === room.owner) {
-        room.owner = room.players[0]
+        room.owner = room.players.keys().next().value || null
         broadcastToRoom(roomId, {
             type: 'ownership_update',
             owner: room.owner
