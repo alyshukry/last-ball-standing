@@ -10,10 +10,10 @@ const { Engine, Events } = Matter
 const rooms = new Map()
 
 export const createRoom = ({ name, password, arenas }) => {
-    const token = randomInt(10).toString() // creator sends to server to verify room ownership on ws connection
+    const token = randomUUID() // creator sends to server to verify room ownership on ws connection
 
     const room = {
-        id: randomInt(10).toString(),
+        id: randomUUID(),
         name,
         password: password || null,
         owner: null, // wait for token
