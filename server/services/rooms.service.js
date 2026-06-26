@@ -73,12 +73,6 @@ export const addPlayerToRoom = (roomId, playerId, password, color, eyes, mouth, 
         username
     )
 
-    // if (room.round.status === 'LOBBY' && room.players.size === 2)
-    //     room.round.lobbyTimeout = setTimeout(() => {
-    //         startRound(room)
-    //         room.round.lobbyTimeout = null
-    //     }, 5000)
-
     if (room.players.size >= 1)
         clearTimeout(room.inactivityTimeout)
 
@@ -119,6 +113,20 @@ export const removePlayerFromRoom = (roomId, playerId) => {
     checkRound(room)
 }
 
+export const kickPlayerFromRoom = (roomId, playerId, ownerId) => {
+    if (!ownerId === getFullRoom(roomId).owner) return
+
+    for (const client of getSocketServer().clients)
+        if (client.id === playerId) {
+            send(client, {
+                type: 'kicked',
+                by: ws.id
+            })
+            removePlayerFromRoom(ws.room, client.id)
+            client.close(4001, 'kicked')
+        }
+}
+
 export const verifyOwnerToken = (roomId, playerId, token) => {
     const room = rooms.get(roomId)
 
@@ -127,4 +135,23 @@ export const verifyOwnerToken = (roomId, playerId, token) => {
         return true
     }
     return false
+}
+
+export const startGame = (roomId, ownerId) => {
+    if (!ownerId === getFullRoom(roomId).owner) return
+    const room = rooms.get(roomId)
+
+    const countdown = 5000
+
+    if (room.round.status === 'LOBBY' && room.players.size === 2) {
+        broadcastToRoom(roomId, {
+            type: 'start_game_countdown',
+            duration: countdown
+        })
+
+        room.round.lobbyTimeout = setTimeout(() => {
+            startRound(room)
+            room.round.lobbyTimeout = null
+        }, countdown)
+    }
 }

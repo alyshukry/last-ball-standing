@@ -1,5 +1,5 @@
 export const API_URL = window.location.hostname === 'localhost'
-    ? '192.168.1.44:8000'
+    ? '192.168.1.59:8000'
     : window.location.host
 
 const views = ['home', 'rooms', 'lobby', 'game']
