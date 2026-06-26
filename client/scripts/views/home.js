@@ -86,6 +86,24 @@ document.querySelector('button#create-room').onclick = (e) => {
                             { "x": 872, "y": 444 },
                             { "x": 308, "y": 264 }
                         ]
+                    },
+                    {
+                        "bodies": [
+                            { "shape": "rect", "x": 150, "y": 468, "width": 200, "height": 24, "options": { "isStatic": 1, "restitution": 0.3 } },
+                            { "shape": "rect", "x": 350, "y": 378, "width": 200, "height": 24, "options": { "isStatic": 1, "restitution": 0.3 } },
+                            { "shape": "rect", "x": 650, "y": 288, "width": 200, "height": 24, "options": { "isStatic": 1, "restitution": 0.3 } },
+                            { "shape": "rect", "x": 850, "y": 198, "width": 200, "height": 24, "options": { "isStatic": 1, "restitution": 0.3 } },
+                            { "shape": "circle", "x": 850, "y": 450, "radius": 40, "options": { "isStatic": 1, "restitution": 0.9 } },
+                            { "shape": "circle", "x": 150, "y": 150, "radius": 40, "options": { "isStatic": 1, "restitution": 0.9 } }
+                        ],
+                        "spawns": [
+                            { "x": 80, "y": 430 },
+                            { "x": 220, "y": 430 },
+                            { "x": 350, "y": 340 },
+                            { "x": 650, "y": 250 },
+                            { "x": 800, "y": 160 },
+                            { "x": 900, "y": 160 }
+                        ]
                     }
                 ]
             })
