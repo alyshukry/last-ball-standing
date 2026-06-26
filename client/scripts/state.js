@@ -7,7 +7,7 @@ export const state = {
     lastUpdate: Date.now(),
     arena: [],
     myId: null,
-    roomOwnerId: null,
+    isOwner: false,
     worldDimensions: { width: 1000, height: 500 }
 }
 
@@ -23,4 +23,4 @@ on('joined', (data) => {
     state.myId = data.id
     state.worldDimensions = data.world_dimensions
 })
-on('ownership_update', (data) => { state.roomOwnerId = data.owner })
+on('ownership_update', (data) => { state.isOwner = data.is_owner })

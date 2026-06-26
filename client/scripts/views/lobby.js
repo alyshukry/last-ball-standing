@@ -40,7 +40,7 @@ on('back_to_lobby', () => {
 })
 on('round_start', () => showView('game'))
 on('ownership_update', (data) => {
-    const isOwner = state.myId === data.owner
+    const isOwner = data.is_owner
 
     const startGameButton = document.querySelector('button#start-game')
     isOwner ? startGameButton.classList.remove('hidden') : startGameButton.classList.add('hidden')

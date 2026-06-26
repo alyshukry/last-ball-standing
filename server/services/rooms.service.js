@@ -94,10 +94,15 @@ export const removePlayerFromRoom = (roomId, playerId) => {
 
     if (playerId === room.owner) {
         room.owner = room.players.keys().next().value || null
-        broadcastToRoom(roomId, {
-            type: 'ownership_update',
-            owner: room.owner
-        })
+        for (const client of getSocketServer().clients) {
+            let isOwner = false
+            if (client.id === playerId) isOwner = true
+
+            send(client, {
+                type: 'ownership_update',
+                is_owner: isOwner
+            })
+        }
     }
 
     if (room.players.size === 1 && room.round.lobbyTimeout) {
