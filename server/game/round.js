@@ -27,6 +27,12 @@ export const endRound = (room) => {
     room.round.status = 'RESULT'
     room.round.winner = winner ? winner.id : null
 
+    for (const [id] of room.players) {
+        if (!room.round.wins.has(id)) {
+            room.round.wins.set(id, 0)
+        }
+    }
+
     if (winner) {
         room.round.wins.set(winner.id, (room.round.wins.get(winner.id) || 0) + 1)
     }

@@ -155,13 +155,30 @@ window.addEventListener('keyup', (e) => keysPressed.delete(e.key.toLowerCase()))
 const winScreen = document.querySelector('#win-screen')
 const winText = document.querySelector('#win-screen h1')
 const winnerAvatar = document.querySelector('#winner-avatar')
+const playerWins = document.querySelector('#player-wins')
+
 on('round_end', (data) => {
     const winner = state.playersInfo[data.winner]
 
-    renderHtmlBall(winnerAvatar, winner?.color, winner?.eyes, winner?.mouth, 5)
+    renderHtmlBall(winnerAvatar, winner?.color, winner?.eyes, winner?.mouth, 3)
 
     winText.textContent = state.playersInfo[data.winner]?.username + ' wins'
     winScreen.classList.remove('hidden')
+
+    const winEntries = Array.isArray(data.wins) ? data.wins : Object.entries(data.wins ?? {})
+    playerWins.innerHTML = ''
+    for (const [id, wins] of winEntries) {
+        const playerElement = document.createElement('li')
+        const playerBallElement = document.createElement('div')
+        const playerWinCount = document.createElement('p')
+        playerWins.appendChild(playerElement)
+        playerElement.appendChild(playerBallElement)
+        playerElement.appendChild(playerWinCount)
+
+        const player = state.playersInfo[id]
+        renderHtmlBall(playerBallElement, player?.color, player?.eyes, player?.mouth, 1)
+        playerWinCount.innerText = wins
+    }
 })
 
 on('round_start', () => {

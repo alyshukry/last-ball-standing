@@ -3,6 +3,31 @@ import { renderHtmlBall, showView } from '../main.js'
 import { ws } from '../socket.js'
 import { state } from '../state.js'
 
+let countdownInterval = null
+
+const startGameCountdown = (duration) => {
+    duration /= 1000
+
+    const countdownElement = document.querySelector('#start-game-countdown')
+    if (!countdownElement) return
+
+    clearInterval(countdownInterval)
+
+    let remaining = Math.max(0, Math.floor(duration))
+    countdownElement.innerText = remaining.toString()
+
+    if (remaining <= 0) return
+
+    countdownInterval = setInterval(() => {
+        remaining -= 1
+        countdownElement.innerText = remaining.toString()
+
+        if (remaining <= 0) {
+            clearInterval(countdownInterval)
+        }
+    }, 1000)
+}
+
 const playerList = document.querySelector('#players-list')
 
 const renderPlayers = () => {
@@ -28,6 +53,13 @@ const renderPlayers = () => {
     }
 }
 
+document.querySelector('button#start-game').addEventListener('click', () => {
+    ws.send(JSON.stringify({
+        type: 'start_game',
+        starter: state.myId
+    }))
+})
+
 on('joined', () => {
     showView('lobby')
     renderPlayers()
@@ -45,10 +77,6 @@ on('ownership_update', (data) => {
     const startGameButton = document.querySelector('button#start-game')
     isOwner ? startGameButton.classList.remove('hidden') : startGameButton.classList.add('hidden')
 })
-
-document.querySelector('button#start-game').addEventListener('click', () => {
-    ws.send(JSON.stringify({
-        type: 'start_game',
-        starter: state.myId
-    }))
+on('start_game_countdown', (data) => {
+    startGameCountdown(data.duration)
 })
