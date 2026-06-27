@@ -4,6 +4,7 @@ import { checkRound, startRound } from '../game/round.js'
 import Matter from 'matter-js'
 import { startLoop } from '../game/loop.js'
 import { broadcastToRoom } from '../utils/socket.js'
+import { getSocketServer } from '../socket.js'
 
 const { Engine, Events } = Matter
 
