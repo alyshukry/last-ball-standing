@@ -1,6 +1,6 @@
 import { randomInt, randomUUID } from 'crypto'
 import { buildArena, removePlayer, addPlayer, setUpRoom } from '../game/world.js'
-import { checkRound, startRound } from '../game/round.js'
+import { checkRound, returnToLobby, startRound } from '../game/round.js'
 import Matter from 'matter-js'
 import { startLoop } from '../game/loop.js'
 import { broadcastToRoom } from '../utils/socket.js'
@@ -21,13 +21,16 @@ export const createRoom = ({ name, password, arenas }) => {
         token,
         arenas,
         players: new Map(),
-        inactivityTimeout: null,
+        timeouts: {
+            inactivity: null,
+            lobby: null,
+            start: null
+        },
         round: {
             status: 'LOBBY',
             number: 0,
             winner: null,
             wins: new Map(),
-            lobbyTimeout: null
         },
         physics: {
             engine: Engine.create(),
@@ -75,7 +78,7 @@ export const addPlayerToRoom = (roomId, playerId, password, color, eyes, mouth, 
     )
 
     if (room.players.size >= 1)
-        clearTimeout(room.inactivityTimeout)
+        clearTimeout(room.timeouts.inactivity)
 
     return 'ok'
 }
@@ -106,15 +109,15 @@ export const removePlayerFromRoom = (roomId, playerId) => {
         }
     }
 
-    if (room.players.size === 1 && room.round.lobbyTimeout) {
-        clearTimeout(room.round.lobbyTimeout)
-        room.round.lobbyTimeout = null
+    if (room.players.size === 1 && room.timeouts.lobby) {
+        clearTimeout(room.timeouts.lobby)
+        room.timeouts.lobby = null
 
         return
     }
 
     if (room.players.size === 0)
-        room.inactivityTimeout = setTimeout(() => { deleteRoom(roomId) }, 5 * 60 * 1000)
+        room.timeouts.inactivity = setTimeout(() => { deleteRoom(roomId) }, 5 * 60 * 1000)
 
     checkRound(room)
 }
@@ -144,7 +147,7 @@ export const verifyOwnerToken = (roomId, playerId, token) => {
 }
 
 export const startGame = (roomId, ownerId) => {
-    if (!ownerId === getFullRoom(roomId).owner) return
+    if (!(ownerId === getFullRoom(roomId).owner)) return
     const room = rooms.get(roomId)
 
     const countdown = 5000
@@ -155,9 +158,16 @@ export const startGame = (roomId, ownerId) => {
             duration: countdown
         })
 
-        room.round.lobbyTimeout = setTimeout(() => {
+        room.timeouts.inactivity = setTimeout(() => {
             startRound(room)
-            room.round.lobbyTimeout = null
+            room.timeouts.inactivity = null
         }, countdown)
     }
+}
+
+export const returnRoomToLobby = (roomId, ownerId) => {
+    if (!(ownerId === getFullRoom(roomId).owner)) return
+    const room = rooms.get(roomId)
+
+    returnToLobby(room)
 }

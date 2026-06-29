@@ -152,6 +152,9 @@ window.addEventListener('keydown', (e) => {
 })
 window.addEventListener('keyup', (e) => keysPressed.delete(e.key.toLowerCase()))
 
+const returnToLobbyButton = document.querySelector('button#return-to-lobby')
+returnToLobbyButton.addEventListener('click', () => ws.send(JSON.stringify({ type: 'return_to_lobby' })))
+
 const winScreen = document.querySelector('#win-screen')
 const winText = document.querySelector('#win-screen h1')
 const winnerAvatar = document.querySelector('#winner-avatar')
@@ -187,3 +190,5 @@ on('round_start', () => {
 })
 
 on('back_to_lobby', () => stopRender())
+
+on('ownership_update', (data) => { data.is_owner ? returnToLobbyButton.classList.remove('hidden') : returnToLobbyButton.classList.add('hidden') })

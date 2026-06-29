@@ -5,6 +5,7 @@ import { handleJoin } from './handlers/join.js'
 import { handleKick } from './handlers/kick.js'
 import { handleStartGame } from './handlers/startGame.js'
 import { removePlayerFromRoom } from './services/rooms.service.js'
+import { handleReturnToLobby } from './handlers/returnToLobby.js'
 
 let wss
 export const initSocket = (server) => {
@@ -26,7 +27,10 @@ export const initSocket = (server) => {
                     handleKick(ws, parsed)
                     break
                 case 'start_game':
-                    handleStartGame(ws, parsed)
+                    handleStartGame(ws)
+                    break
+                case 'return_to_lobby':
+                    handleReturnToLobby(ws)
                     break
             }
         })

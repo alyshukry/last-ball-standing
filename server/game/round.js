@@ -43,7 +43,7 @@ export const endRound = (room) => {
         wins: Object.fromEntries(room.round.wins)
     })
 
-    setTimeout(() => startRound(room), 5000)
+    room.timeouts.start = setTimeout(() => startRound(room), 5000)
 }
 
 export const startRound = (room) => {
@@ -60,13 +60,17 @@ export const startRound = (room) => {
             type: 'round_start'
         })
     }
-    else {
-        for (const [id, player] of room.players)
-            killPlayer(room, id)
-        room.round.status = 'LOBBY'
+    else returnToLobby(room)
+}
 
-        broadcastToRoom(room.id, {
-            type: 'back_to_lobby'
-        })
-    }
+export const returnToLobby = (room) => {
+    for (const [id, player] of room.players)
+        killPlayer(room, id)
+    room.round.status = 'LOBBY'
+
+    clearTimeout(room.timeouts.start)
+    
+    broadcastToRoom(room.id, {
+        type: 'back_to_lobby'
+    })
 }

@@ -55,8 +55,7 @@ const renderPlayers = () => {
 
 document.querySelector('button#start-game').addEventListener('click', () => {
     ws.send(JSON.stringify({
-        type: 'start_game',
-        starter: state.myId
+        type: 'start_game'
     }))
 })
 
@@ -64,19 +63,24 @@ on('joined', () => {
     showView('lobby')
     renderPlayers()
 })
+
 on('player_info', () => renderPlayers())
+
 on('player_left', () => renderPlayers())
+
 on('back_to_lobby', () => {
     showView('lobby')
     renderPlayers()
 })
 on('round_start', () => showView('game'))
+
 on('ownership_update', (data) => {
     const isOwner = data.is_owner
 
     const startGameButton = document.querySelector('button#start-game')
     isOwner ? startGameButton.classList.remove('hidden') : startGameButton.classList.add('hidden')
 })
+
 on('start_game_countdown', (data) => {
     startGameCountdown(data.duration)
 })
