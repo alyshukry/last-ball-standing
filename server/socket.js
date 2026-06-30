@@ -31,16 +31,22 @@ export const initSocket = (server) => {
                     case 'start_game':
                         handleStartGame(ws, parsed)
                         break
+                    case 'return_room_to_lobby':
+                        handleReturnToLobby(ws)
+                        break
                 }
             } catch (err) {
-                send(ws, { type: 'error', error: err.message })
+                send(ws, { type: 'error', error: err.message, code: err.code })
                 if (err.fatal) ws.close(4000, err.code || 'fatal_error')
             }
         })
 
         ws.on('close', () => {
-            removePlayerFromRoom(ws.room, ws.id)
-
+            try {
+                removePlayerFromRoom(ws.room, ws.id)
+            } catch (err) {
+                console.error('Error on close:', err)
+            }
         })
     })
 

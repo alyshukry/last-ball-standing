@@ -133,7 +133,7 @@ export const kickPlayerFromRoom = (roomId, playerId, ownerId) => {
                 type: 'kicked',
                 by: ownerId
             })
-            removePlayerFromRoom(ws.room, client.id)
+            removePlayerFromRoom(roomId, client.id)
             client.close(4001, 'kicked')
         }
 }
@@ -164,9 +164,9 @@ export const startGame = (roomId, ownerId) => {
             duration: countdown
         })
 
-        room.timeouts.inactivity = setTimeout(() => {
+        room.timeouts.start = setTimeout(() => {
             startRound(room)
-            room.timeouts.inactivity = null
+            room.timeouts.start = null
         }, countdown)
     }
 }

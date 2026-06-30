@@ -153,7 +153,7 @@ window.addEventListener('keydown', (e) => {
 window.addEventListener('keyup', (e) => keysPressed.delete(e.key.toLowerCase()))
 
 const returnToLobbyButton = document.querySelector('button#return-to-lobby')
-returnToLobbyButton.addEventListener('click', () => ws.send(JSON.stringify({ type: 'return_to_lobby' })))
+returnToLobbyButton.addEventListener('click', () => ws.send(JSON.stringify({ type: 'return_room_to_lobby' })))
 
 const winScreen = document.querySelector('#win-screen')
 const winText = document.querySelector('#win-screen h1')
