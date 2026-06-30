@@ -1,6 +1,7 @@
 import { WORLD_HEIGHT, WORLD_WIDTH } from '../game/constants.js'
 import { addPlayerToRoom, getFullRoom, verifyOwnerToken } from '../services/rooms.service.js'
 import { getSocketServer } from '../socket.js'
+import { AppError } from '../utils/errors.js'
 import { send } from '../utils/socket.js'
 import { randomUUID } from 'crypto'
 
@@ -28,13 +29,12 @@ export const handleJoin = (ws, data) => {
                     const player = getFullRoom(ws.room).players.get(client.id)
                     send(ws, { type: 'player_info', id: client.id, color: player.color, eyes: player.eyes, mouth: player.mouth, username: player.username })
                 }
-            const room = getFullRoom(ws.room)
             break
         case 'room_not_found':
-            send(ws, { type: 'join_error', error: 'Room not found' })
+            throw new AppError('Room not found', 'room_not_found')
             break
-        case 'incorrect_password':
-            send(ws, { type: 'join_error', error: 'Incorrect password' })
+            case 'incorrect_password':
+            throw new AppError('Incorrect password', 'incorrect_room_password')
             break
     }
 }

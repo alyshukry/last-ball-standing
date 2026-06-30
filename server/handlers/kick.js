@@ -6,5 +6,5 @@ export const handleKick = (ws, data) => {
     if (!ws.id || !ws.room) return
 
     if (ws.id !== data.player)
-        kickPlayerFromRoom(ws.room, data.player)
+        kickPlayerFromRoom(ws.room, ws.id, data.player)
 }

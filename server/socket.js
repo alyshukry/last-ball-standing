@@ -14,24 +14,27 @@ export const initSocket = (server) => {
     wss.on('connection', (ws) => {
 
         ws.on('message', (data) => {
-            const parsed = parse(data)
+            let parsed
+            try {
+                parsed = parse(data)
 
-            switch (parsed.type) {
-                case 'join_room':
-                    handleJoin(ws, parsed)
-                    break
-                case 'input':
-                    handleInput(ws, parsed)
-                    break
-                case 'kick_player':
-                    handleKick(ws, parsed)
-                    break
-                case 'start_game':
-                    handleStartGame(ws)
-                    break
-                case 'return_to_lobby':
-                    handleReturnToLobby(ws)
-                    break
+                switch (parsed.type) {
+                    case 'join_room':
+                        handleJoin(ws, parsed)
+                        break
+                    case 'input':
+                        handleInput(ws, parsed)
+                        break
+                    case 'kick_player':
+                        handleKick(ws, parsed)
+                        break
+                    case 'start_game':
+                        handleStartGame(ws, parsed)
+                        break
+                }
+            } catch (err) {
+                console.error(`error handling ${parsed?.type}:`, err.message)
+                send(ws, { type: 'error', error: err.message })
             }
         })
 

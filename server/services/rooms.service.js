@@ -3,7 +3,7 @@ import { buildArena, removePlayer, addPlayer, setUpRoom } from '../game/world.js
 import { checkRound, returnToLobby, startRound } from '../game/round.js'
 import Matter from 'matter-js'
 import { startLoop } from '../game/loop.js'
-import { broadcastToRoom } from '../utils/socket.js'
+import { broadcastToRoom, send } from '../utils/socket.js'
 import { getSocketServer } from '../socket.js'
 
 const { Engine, Events } = Matter
@@ -123,13 +123,13 @@ export const removePlayerFromRoom = (roomId, playerId) => {
 }
 
 export const kickPlayerFromRoom = (roomId, playerId, ownerId) => {
-    if (!ownerId === getFullRoom(roomId).owner) return
+    if (ownerId !== getFullRoom(roomId).owner) return
 
     for (const client of getSocketServer().clients)
         if (client.id === playerId) {
             send(client, {
                 type: 'kicked',
-                by: ws.id
+                by: ownerId
             })
             removePlayerFromRoom(ws.room, client.id)
             client.close(4001, 'kicked')
@@ -147,7 +147,7 @@ export const verifyOwnerToken = (roomId, playerId, token) => {
 }
 
 export const startGame = (roomId, ownerId) => {
-    if (!(ownerId === getFullRoom(roomId).owner)) return
+    if (ownerId !== getFullRoom(roomId).owner) return
     const room = rooms.get(roomId)
 
     const countdown = 5000
@@ -166,7 +166,7 @@ export const startGame = (roomId, ownerId) => {
 }
 
 export const returnRoomToLobby = (roomId, ownerId) => {
-    if (!(ownerId === getFullRoom(roomId).owner)) return
+    if (ownerId !== getFullRoom(roomId).owner) return
     const room = rooms.get(roomId)
 
     returnToLobby(room)
