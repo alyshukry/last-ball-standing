@@ -33,8 +33,8 @@ export const initSocket = (server) => {
                         break
                 }
             } catch (err) {
-                console.error(`error handling ${parsed?.type}:`, err.message)
                 send(ws, { type: 'error', error: err.message })
+                if (err.fatal) ws.close(4000, err.code || 'fatal_error')
             }
         })
 

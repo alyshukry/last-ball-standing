@@ -17,24 +17,16 @@ export const handleJoin = (ws, data) => {
 
     const playerJoin = addPlayerToRoom(ws.room, ws.id, data.password || null, data.color, data.eyes, data.mouth, data.username)
 
-    switch (playerJoin) {
-        case 'ok':
-            send(ws, { type: 'joined', id: ws.id, room: ws.room, color: data.color, eyes: data.eyes, mouth: data.mouth, username: data.username, world_dimensions: { width: WORLD_WIDTH, height: WORLD_HEIGHT } })
-            send(ws, { type: 'ownership_update', is_owner: ws.id === getFullRoom(ws.room).owner })
+    if (playerJoin === 'ok') {
+        send(ws, { type: 'joined', id: ws.id, room: ws.room, color: data.color, eyes: data.eyes, mouth: data.mouth, username: data.username, world_dimensions: { width: WORLD_WIDTH, height: WORLD_HEIGHT } })
+        send(ws, { type: 'ownership_update', is_owner: ws.id === getFullRoom(ws.room).owner })
 
-            for (const client of getSocketServer().clients)
-                if (client.room === ws.room) send(client, { type: 'player_info', id: ws.id, color: data.color, eyes: data.eyes, mouth: data.mouth, username: data.username })
-            for (const client of getSocketServer().clients)
-                if (client.id !== ws.id && client.room === ws.room) {
-                    const player = getFullRoom(ws.room).players.get(client.id)
-                    send(ws, { type: 'player_info', id: client.id, color: player.color, eyes: player.eyes, mouth: player.mouth, username: player.username })
-                }
-            break
-        case 'room_not_found':
-            throw new AppError('Room not found', 'room_not_found')
-            break
-            case 'incorrect_password':
-            throw new AppError('Incorrect password', 'incorrect_room_password')
-            break
+        for (const client of getSocketServer().clients)
+            if (client.room === ws.room) send(client, { type: 'player_info', id: ws.id, color: data.color, eyes: data.eyes, mouth: data.mouth, username: data.username })
+        for (const client of getSocketServer().clients)
+            if (client.id !== ws.id && client.room === ws.room) {
+                const player = getFullRoom(ws.room).players.get(client.id)
+                send(ws, { type: 'player_info', id: client.id, color: player.color, eyes: player.eyes, mouth: player.mouth, username: player.username })
+            }
     }
 }

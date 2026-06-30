@@ -1,4 +1,5 @@
 import { getSocketServer } from '../socket.js'
+import { AppError } from '../utils/errors.js'
 import { send, broadcastToRoom } from '../utils/socket.js'
 import { BALL_RADIUS } from './constants.js'
 import Matter from 'matter-js'
@@ -106,7 +107,9 @@ export const revivePlayer = (room, id, playerIndex) => {
 export const applyInput = (room, id, x, y) => {
     const player = room.players.get(id)
     const ball = player.ball
-    if (!ball) return
+    if (!ball) throw new AppError('Player does not exist', 'player_not_found')
+
+    if (!(typeof x === 'number' && Number.isFinite(x)) || !(typeof y === 'number' && Number.isFinite(x))) throw new AppError('Invalid x and or y values', 'invalid_input')
 
     if (x === 0 && y === 0) return
 
@@ -123,7 +126,7 @@ export const applyInput = (room, id, x, y) => {
 export const applyMove = (room, id, move) => {
     const player = room.players.get(id)
     const ball = player.ball
-    if (!ball) return
+    if (!ball) throw new AppError('Player does not exist', 'player_not_found')
 
     if (move === 'jump' && player.canJump && Math.abs(ball.velocity.y) < 25) {
         Body.applyForce(ball, ball.position, {
@@ -132,6 +135,7 @@ export const applyMove = (room, id, move) => {
         })
         player.canJump = false
     }
+    else if (move !== 'jump') throw new AppError(`Invalid move: ${move}`, 'invalid_input')
 }
 
 export const update = (room) => {

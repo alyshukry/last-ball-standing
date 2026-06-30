@@ -5,6 +5,7 @@ import Matter from 'matter-js'
 import { startLoop } from '../game/loop.js'
 import { broadcastToRoom, send } from '../utils/socket.js'
 import { getSocketServer } from '../socket.js'
+import { AppError } from '../utils/errors.js'
 
 const { Engine, Events } = Matter
 
@@ -63,8 +64,8 @@ export const getFullRoom = (id) => rooms.get(id)
 export const addPlayerToRoom = (roomId, playerId, password, color, eyes, mouth, username) => {
     const room = rooms.get(roomId)
 
-    if (!room) return 'room_not_found'
-    if (room.password && room.password !== password) return 'incorrect_password'
+    if (!room) throw new AppError('Room not found', 'room_not_found', true)
+    if (room.password && room.password !== password) throw new AppError('Incorrect room password', 'incorrect_room_password', true)
 
     addPlayer(
         room,
@@ -84,10 +85,11 @@ export const addPlayerToRoom = (roomId, playerId, password, color, eyes, mouth, 
 }
 
 export const removePlayerFromRoom = (roomId, playerId) => {
-    if (!roomId || !playerId) return
+    if (!roomId || !playerId) throw new AppError('Room ID and or user ID not provided', 'missing_id')
     const room = rooms.get(roomId)
-    if (!room) return
-    if (!getFullRoom(roomId).players.get(playerId)) return
+
+    if (!room) throw new AppError('Room not found', 'room_not_found')
+    if (!room.players.get(playerId)) throw new AppError('Player does not exist', 'player_not_found')
 
     removePlayer(room, playerId)
 
@@ -123,7 +125,7 @@ export const removePlayerFromRoom = (roomId, playerId) => {
 }
 
 export const kickPlayerFromRoom = (roomId, playerId, ownerId) => {
-    if (ownerId !== getFullRoom(roomId).owner) return
+    if (ownerId !== getFullRoom(roomId).owner) throw new AppError('User is not room owner', 'not_owner')
 
     for (const client of getSocketServer().clients)
         if (client.id === playerId) {
@@ -139,6 +141,8 @@ export const kickPlayerFromRoom = (roomId, playerId, ownerId) => {
 export const verifyOwnerToken = (roomId, playerId, token) => {
     const room = rooms.get(roomId)
 
+    if (!room) throw new AppError('Room not found', 'room_not_found')
+
     if (room.token === token) {
         room.owner = playerId
         return true
@@ -147,8 +151,10 @@ export const verifyOwnerToken = (roomId, playerId, token) => {
 }
 
 export const startGame = (roomId, ownerId) => {
-    if (ownerId !== getFullRoom(roomId).owner) return
     const room = rooms.get(roomId)
+
+    if (!room) throw new AppError('Room not found', 'room_not_found')
+    if (ownerId !== room.owner) throw new AppError('User is not room owner', 'not_owner')
 
     const countdown = 5000
 
@@ -166,8 +172,10 @@ export const startGame = (roomId, ownerId) => {
 }
 
 export const returnRoomToLobby = (roomId, ownerId) => {
-    if (ownerId !== getFullRoom(roomId).owner) return
     const room = rooms.get(roomId)
+
+    if (!room) throw new AppError('Room not found', 'room_not_found')
+    if (ownerId !== room.owner) throw new AppError('User is not room owner', 'not_owner')
 
     returnToLobby(room)
 }
