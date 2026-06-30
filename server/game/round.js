@@ -46,8 +46,8 @@ export const endRound = (room) => {
     room.timeouts.start = setTimeout(() => startRound(room), 5000)
 }
 
-export const startRound = (room) => {
-    if (room.players.size >= 2) {
+export const startRound = (room, ignorePlayerCount = false) => {
+    if (room.players.size >= 2 || ignorePlayerCount) {
         let playerIndex = 0
         for (const [id, player] of room.players) {
             revivePlayer(room, id, playerIndex)

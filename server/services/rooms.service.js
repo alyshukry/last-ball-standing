@@ -125,7 +125,11 @@ export const removePlayerFromRoom = (roomId, playerId) => {
 }
 
 export const kickPlayerFromRoom = (roomId, playerId, ownerId) => {
-    if (ownerId !== getFullRoom(roomId).owner) throw new AppError('User is not room owner', 'not_owner')
+    if (!roomId || !playerId || ownerId) throw new AppError('Room ID and or user ID and or owner ID not provided', 'missing_id')
+    const room = rooms.get(roomId)
+
+    if (!room) throw new AppError('Room not found', 'room_not_found')
+    if (!room.players.get(playerId)) throw new AppError('Player does not exist', 'player_not_found')
 
     for (const client of getSocketServer().clients)
         if (client.id === playerId) {
@@ -158,14 +162,14 @@ export const startGame = (roomId, ownerId) => {
 
     const countdown = 5000
 
-    if (room.round.status === 'LOBBY' && room.players.size === 2) {
+    if (room.round.status === 'LOBBY') {
         broadcastToRoom(roomId, {
             type: 'start_game_countdown',
             duration: countdown
         })
 
         room.timeouts.start = setTimeout(() => {
-            startRound(room)
+            startRound(room, true)
             room.timeouts.start = null
         }, countdown)
     }

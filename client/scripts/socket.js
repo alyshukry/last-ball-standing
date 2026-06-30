@@ -31,4 +31,4 @@ const setUpWs = (ws) => {
     }
 }
 
-on('error', (e) => { if (e.code === 'room_not_found' || e.code === 'incorrect_room_password') ws.close() })
+on('error', (e) => { console.log(e) })
