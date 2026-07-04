@@ -140,4 +140,4 @@ const createBannerBalls = (container, count, scale = 1) => {
     }
 }
 
-createBannerBalls(document.querySelector('#banner #balls-container'), 10, .85)
+createBannerBalls(document.querySelector('#banner #balls-container'), 10, 1)
