@@ -84,3 +84,7 @@ on('ownership_update', (data) => {
 on('start_game_countdown', (data) => {
     startGameCountdown(data.duration)
 })
+
+on('kicked', (data) => {
+    showView('home')
+})

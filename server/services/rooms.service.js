@@ -97,6 +97,7 @@ export const addPlayerToRoom = (roomId, playerId, password, color, eyes, mouth, 
 }
 
 export const removePlayerFromRoom = (roomId, playerId) => {
+    if (!room.players.get(playerId)) return
     if (!roomId || !playerId) throw new AppError('Room ID and or user ID not provided', 'missing_id')
     const room = rooms.get(roomId)
 
