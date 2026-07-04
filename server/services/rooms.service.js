@@ -145,7 +145,7 @@ export const kickPlayerFromRoom = (roomId, playerId, ownerId) => {
         if (client.id === playerId) {
             send(client, {
                 type: 'kicked',
-                by: ownerId
+                by: room.players.get(ownerId).username
             })
             removePlayerFromRoom(roomId, client.id)
             client.close(4001, 'kicked')
