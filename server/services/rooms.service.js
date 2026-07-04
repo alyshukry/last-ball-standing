@@ -119,7 +119,7 @@ export const removePlayerFromRoom = (roomId, playerId) => {
     }
 
     if (room.players.size === 0)
-        room.timeouts.inactivity = setTimeout(() => { deleteRoom(roomId) }, 5 * 60 * 1000)
+        room.timeouts.inactivity = setTimeout(() => { try { deleteRoom(roomId) } catch (err) { console.error('Delete room error: ' + err) } }, 5 * 60 * 1000)
 
     checkRound(room)
 }
@@ -169,8 +169,11 @@ export const startGame = (roomId, ownerId) => {
         })
 
         room.timeouts.start = setTimeout(() => {
-            startRound(room, true)
-            room.timeouts.start = null
+            try {
+                startRound(room)
+                room.timeouts.start = null
+            }
+            catch (err) { console.error('Start round error: ' + err) }
         }, countdown)
     }
 }

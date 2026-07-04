@@ -43,7 +43,13 @@ export const endRound = (room) => {
         wins: Object.fromEntries(room.round.wins)
     })
 
-    room.timeouts.start = setTimeout(() => startRound(room), 5000)
+    room.timeouts.start = setTimeout(() => {
+        try {
+            startRound(room)
+            room.timeouts.start = null
+        }
+        catch (err) { console.error('Start round error: ' + err) }
+    }, 5000)
 }
 
 export const startRound = (room, ignorePlayerCount = false) => {
@@ -69,7 +75,7 @@ export const returnToLobby = (room) => {
     room.round.status = 'LOBBY'
 
     clearTimeout(room.timeouts.start)
-    
+
     broadcastToRoom(room.id, {
         type: 'back_to_lobby'
     })
