@@ -113,13 +113,11 @@ export const removePlayerFromRoom = (roomId, playerId) => {
     if (playerId === room.owner) {
         room.owner = room.players.keys().next().value || null
         for (const client of getSocketServer().clients) {
-            let isOwner = false
-            if (client.id === playerId) isOwner = true
-
-            send(client, {
-                type: 'ownership_update',
-                is_owner: isOwner
-            })
+            if (client.room === room.id)
+                send(client, {
+                    type: 'ownership_update',
+                    is_owner: client.id === room.owner
+                })
         }
     }
 
@@ -137,7 +135,7 @@ export const removePlayerFromRoom = (roomId, playerId) => {
 }
 
 export const kickPlayerFromRoom = (roomId, playerId, ownerId) => {
-    if (!roomId || !playerId || ownerId) throw new AppError('Room ID and or user ID and or owner ID not provided', 'missing_id')
+    if (!roomId || !playerId || !ownerId) throw new AppError('Room ID and or user ID and or owner ID not provided', 'missing_id')
     const room = rooms.get(roomId)
 
     if (!room) throw new AppError('Room not found', 'room_not_found')
