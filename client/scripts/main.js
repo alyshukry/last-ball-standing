@@ -1,6 +1,6 @@
 export const API_URL = window.location.hostname === 'localhost'
-    ? '192.168.1.60:8000'
-    : window.location.host
+    ? `localhost:8000`
+    : `${window.location.host.split(':')[0]}:8000`
 
 const views = ['home', 'rooms', 'lobby', 'game']
 
