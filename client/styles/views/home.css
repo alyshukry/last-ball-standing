@@ -1,10 +1,30 @@
 #home.view {
     display: flex;
-    justify-content: center;
+    flex-direction: column;
     align-items: center;
 
     width: 100%;
     height: 100%;
+}
+
+#banner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    width: 75%;
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+}
+
+#banner #image {
+    width: 100%;
+}
+
+#banner #balls-container {
+    display: flex;
+    justify-content: space-between;
+    width: 80%;
 }
 
 #setup-panel {

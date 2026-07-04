@@ -118,3 +118,26 @@ document.querySelector('button#create-room').onclick = (e) => {
         joinRoom(data.room.id, data.token, password)
     })
 }
+
+const createBannerBalls = (container, count, scale = 1) => {
+    container.replaceChildren()
+
+    const safeCount = Math.max(0, Math.floor(count))
+    const colorCount = Math.max(1, AVATAR_COLORS - 4)
+
+    for (let index = 0; index < safeCount; index++) {
+        const ball = document.createElement('div')
+        ball.className = 'ball'
+        container.appendChild(ball)
+
+        const color = safeCount <= 1
+            ? 0
+            : Math.round(index * (colorCount - 1) / (safeCount - 1))
+        const eyes = Math.floor(Math.random() * AVATAR_EYES)
+        const mouth = Math.floor(Math.random() * AVATAR_MOUTHS)
+
+        renderHtmlBall(ball, color, eyes, mouth, scale)
+    }
+}
+
+createBannerBalls(document.querySelector('#banner #balls-container'), 10, .85)
