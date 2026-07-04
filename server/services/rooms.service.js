@@ -170,7 +170,7 @@ export const startGame = (roomId, ownerId) => {
 
         room.timeouts.start = setTimeout(() => {
             try {
-                startRound(room)
+                startRound(room, true)
                 room.timeouts.start = null
             }
             catch (err) { console.error('Start round error: ' + err) }
