@@ -27,6 +27,10 @@ export const createRoom = ({ name, password, arenas }) => {
             lobby: null,
             start: null
         },
+        intervals: {
+            game: null,
+            broadcast: null
+        },
         round: {
             status: 'LOBBY',
             number: 0,
@@ -48,7 +52,15 @@ export const createRoom = ({ name, password, arenas }) => {
 
 export const getRooms = () => Array.from(rooms.values()).map(serialize)
 export const getRoom = (id) => serialize(rooms.get(id))
-export const deleteRoom = (id) => rooms.delete(id)
+export const deleteRoom = (roomId) => {
+    const room = getFullRoom(roomId)
+    if (!room) return
+
+    Object.values(room.intervals).forEach(clearInterval)
+    Object.values(room.timeouts).forEach(clearTimeout)
+
+    rooms.delete(roomId)
+}
 
 const serialize = (room) => ({
     id: room.id,

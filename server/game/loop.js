@@ -10,7 +10,7 @@ export const startLoop = (room) => {
         players: {}
     }
 
-    setInterval(() => {
+    room.intervals.game = setInterval(() => {
         try {
             update(room)
             tick++
@@ -29,7 +29,7 @@ export const startLoop = (room) => {
         catch (err) { console.error('Game loop error: ' + err) }
     }, 1000 / 60)
 
-    setInterval(() => {
+    room.intervals.broadcast = setInterval(() => {
         try {
             // cleanup disconnected and dead players
             for (const id in payload.players)
