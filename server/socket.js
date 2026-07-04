@@ -37,6 +37,7 @@ export const initSocket = (server) => {
                 }
             } catch (err) {
                 send(ws, { type: 'error', error: err.message, code: err.code })
+                console.error(err)
                 if (err.fatal) ws.close(4000, err.code || 'fatal_error')
             }
         })
