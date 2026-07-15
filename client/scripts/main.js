@@ -1,6 +1,6 @@
 export const API_URL = window.location.hostname === 'localhost'
-    ? `localhost:8000`
-    : `${window.location.host.split(':')[0]}:8000`
+    ? `localhost:${window.location.port || 8000}`
+    : `${window.location.hostname}${window.location.port ? `:${window.location.port}` : ''}`
 
 const views = ['home', 'rooms', 'lobby', 'game']
 
