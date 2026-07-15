@@ -4,6 +4,44 @@ export const API_URL = window.location.hostname === 'localhost'
 
 const views = ['home', 'rooms', 'lobby', 'game']
 
+export const ARENAS = [
+    {
+        "bodies": [
+            { "shape": "rect", "x": 500, "y": 468, "width": 980, "height": 24, "options": { "isStatic": 1, "restitution": 0.3 } },
+            { "shape": "rect", "x": 500, "y": 300, "width": 480, "height": 24, "options": { "isStatic": 1, "restitution": 0.3 } },
+            { "shape": "circle", "x": 260, "y": 300, "radius": 12, "options": { "isStatic": 1, "restitution": 0.3 } },
+            { "shape": "circle", "x": 740, "y": 300, "radius": 12, "options": { "isStatic": 1, "restitution": 0.3 } },
+            { "shape": "circle", "x": 500, "y": 175, "radius": 32, "options": { "isStatic": 1, "restitution": 0.3 } }
+        ],
+        "spawns": [
+            { "x": 58, "y": 444 },
+            { "x": 942, "y": 444 },
+            { "x": 692, "y": 264 },
+            { "x": 130, "y": 444 },
+            { "x": 872, "y": 444 },
+            { "x": 308, "y": 264 }
+        ]
+    },
+    {
+        "bodies": [
+            { "shape": "rect", "x": 150, "y": 468, "width": 200, "height": 24, "options": { "isStatic": 1, "restitution": 0.3 } },
+            { "shape": "rect", "x": 350, "y": 378, "width": 200, "height": 24, "options": { "isStatic": 1, "restitution": 0.3 } },
+            { "shape": "rect", "x": 650, "y": 288, "width": 200, "height": 24, "options": { "isStatic": 1, "restitution": 0.3 } },
+            { "shape": "rect", "x": 850, "y": 198, "width": 200, "height": 24, "options": { "isStatic": 1, "restitution": 0.3 } },
+            { "shape": "circle", "x": 850, "y": 450, "radius": 40, "options": { "isStatic": 1, "restitution": 0.9 } },
+            { "shape": "circle", "x": 150, "y": 150, "radius": 40, "options": { "isStatic": 1, "restitution": 0.9 } }
+        ],
+        "spawns": [
+            { "x": 80, "y": 430 },
+            { "x": 220, "y": 430 },
+            { "x": 350, "y": 340 },
+            { "x": 650, "y": 250 },
+            { "x": 800, "y": 160 },
+            { "x": 900, "y": 160 }
+        ]
+    }
+]
+
 export const showView = (view) => {
     views.forEach(v => document.querySelector(`.view#${v}`).classList.add('hidden'))
     document.querySelector(`.view#${view}`).classList.remove('hidden')

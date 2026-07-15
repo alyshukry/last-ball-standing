@@ -1,4 +1,4 @@
-import { showView, API_URL, renderHtmlBall, AVATAR_COLORS, AVATAR_EYES, AVATAR_MOUTHS } from '../main.js'
+import { showView, API_URL, renderHtmlBall, AVATAR_COLORS, AVATAR_EYES, AVATAR_MOUTHS, ARENAS } from '../main.js'
 import { joinRoom } from '../views/rooms.js'
 
 let color = parseInt(localStorage.getItem('color')) || Math.floor(Math.random() * AVATAR_COLORS)
@@ -48,17 +48,40 @@ document.querySelector('button#join-room').addEventListener('click', () => {
     showView('rooms')
 })
 
-document.querySelector('button#create-room').onclick = (e) => {
+const createRoomButton = document.querySelector('button#create-room')
+const joinButtons = document.querySelector('#join-buttons')
+
+const renderCreateRoomButton = () => {
+    const button = document.createElement('button')
+    button.id = 'create-room'
+    button.type = 'button'
+    button.textContent = 'Create room'
+
+    button.addEventListener('click', () => {
+        button.replaceWith(renderCreateRoomForm())
+    })
+
+    return button
+}
+
+const renderCreateRoomForm = () => {
     const form = document.createElement('form')
+    form.className = 'create-room-form'
     form.innerHTML = `
-        <label for="name">Room Name:</label>
-        <input type="text" id="name" name="name">
-        <label for="password">Password:</label>
-        <input type="text" id="password" name="password">
-        <input type="submit" value="Join room">
+        <label for="room-name">Room name</label>
+        <input type="text" id="room-name" name="name" placeholder="">
+        <label for="room-password">Password</label>
+        <input type="text" id="room-password" name="password" placeholder="Optional">
+        <div class="create-room-actions">
+            <button type="submit" class="submit">Create room</button>
+            <button type="button" class="cancel">Cancel</button>
+        </div>
     `
-    document.querySelector('button#create-room').appendChild(form)
-    document.querySelector('button#create-room').onclick = () => { }
+
+    form.querySelector('button.cancel').addEventListener('click', (e) => {
+        e.preventDefault()
+        form.replaceWith(renderCreateRoomButton())
+    })
 
     form.addEventListener('submit', async (e) => {
         e.preventDefault()  // stop page reload
@@ -68,45 +91,7 @@ document.querySelector('button#create-room').onclick = (e) => {
         const res = await fetch(window.location.protocol + '//' + API_URL + '/rooms', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                name, password, arenas: [
-                    {
-                        "bodies": [
-                            { "shape": "rect", "x": 500, "y": 468, "width": 980, "height": 24, "options": { "isStatic": 1, "restitution": 0.3 } },
-                            { "shape": "rect", "x": 500, "y": 300, "width": 480, "height": 24, "options": { "isStatic": 1, "restitution": 0.3 } },
-                            { "shape": "circle", "x": 260, "y": 300, "radius": 12, "options": { "isStatic": 1, "restitution": 0.3 } },
-                            { "shape": "circle", "x": 740, "y": 300, "radius": 12, "options": { "isStatic": 1, "restitution": 0.3 } },
-                            { "shape": "circle", "x": 500, "y": 175, "radius": 32, "options": { "isStatic": 1, "restitution": 0.3 } }
-                        ],
-                        "spawns": [
-                            { "x": 58, "y": 444 },
-                            { "x": 942, "y": 444 },
-                            { "x": 692, "y": 264 },
-                            { "x": 130, "y": 444 },
-                            { "x": 872, "y": 444 },
-                            { "x": 308, "y": 264 }
-                        ]
-                    },
-                    {
-                        "bodies": [
-                            { "shape": "rect", "x": 150, "y": 468, "width": 200, "height": 24, "options": { "isStatic": 1, "restitution": 0.3 } },
-                            { "shape": "rect", "x": 350, "y": 378, "width": 200, "height": 24, "options": { "isStatic": 1, "restitution": 0.3 } },
-                            { "shape": "rect", "x": 650, "y": 288, "width": 200, "height": 24, "options": { "isStatic": 1, "restitution": 0.3 } },
-                            { "shape": "rect", "x": 850, "y": 198, "width": 200, "height": 24, "options": { "isStatic": 1, "restitution": 0.3 } },
-                            { "shape": "circle", "x": 850, "y": 450, "radius": 40, "options": { "isStatic": 1, "restitution": 0.9 } },
-                            { "shape": "circle", "x": 150, "y": 150, "radius": 40, "options": { "isStatic": 1, "restitution": 0.9 } }
-                        ],
-                        "spawns": [
-                            { "x": 80, "y": 430 },
-                            { "x": 220, "y": 430 },
-                            { "x": 350, "y": 340 },
-                            { "x": 650, "y": 250 },
-                            { "x": 800, "y": 160 },
-                            { "x": 900, "y": 160 }
-                        ]
-                    }
-                ]
-            })
+            body: JSON.stringify({ name, password, arenas: ARENAS })
         })
 
         if (!res.ok) {
@@ -117,7 +102,11 @@ document.querySelector('button#create-room').onclick = (e) => {
 
         joinRoom(data.room.id, data.token, password)
     })
+
+    return form
 }
+
+joinButtons.replaceChild(renderCreateRoomButton(), createRoomButton)
 
 const createBannerBalls = (container, count, scale = 1) => {
     container.replaceChildren()
