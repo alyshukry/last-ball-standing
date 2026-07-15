@@ -42,15 +42,24 @@
 
 #avatar-customization {
     position: relative;
+
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: 1rem;
+
+    width: 100%;
+
+    padding: 0 2.5rem 0 2.5rem;
 }
 
 button#random {
     position: absolute;
     top: 0;
     right: 0;
+
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
 }
 
 .arrows {
@@ -58,6 +67,16 @@ button#random {
     align-items: center;
     flex-direction: column;
     gap: 8px;
+
+    height: 80%;
+}
+
+button.arrow,
+button#random {
+    background: none;
+    border: none;
+
+    padding: 0;
 }
 
 #join-buttons {
