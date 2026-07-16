@@ -55,6 +55,7 @@ const ATLAS_HEIGHT = 8
 export const AVATAR_COLORS = 20
 export const AVATAR_EYES = 10
 export const AVATAR_MOUTHS = 11
+
 export const renderHtmlBall = (container, color, eyes, mouth, scale = 1) => {
     container.style.position = 'relative'
     container.style.width = `${SPRITE_SIZE * scale}px`
