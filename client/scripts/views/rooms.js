@@ -14,7 +14,7 @@ async function displayRooms() {
         const data = await res.json()
 
         if (data.length < 1) {
-            roomsList.innerHTML = 'No rooms'
+            roomsList.innerHTML = '<p id="no-rooms-found">No rooms found</p>'
             return
         }
 
@@ -23,7 +23,9 @@ async function displayRooms() {
             const roomElement = document.createElement('li')
 
             roomElement.className = 'room'
-            roomElement.innerHTML = data[i].name
+            roomElement.innerHTML = `
+                <p class="room-name">${data[i].name}</p><p class="room-player-count">${data[i].playerCount + ' ' + (data[i].playerCount === 1 ? 'players' : 'player')}</p>
+            `
             roomElement.onclick = () => {
                 if (data[i].hasPassword) {
                     const form = document.createElement('form')
