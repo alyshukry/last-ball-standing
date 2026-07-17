@@ -9,7 +9,7 @@ const updateBall = () => {
     localStorage.setItem('color', color)
     localStorage.setItem('eyes', eyes)
     localStorage.setItem('mouth', mouth)
-    renderHtmlBall(document.querySelector('#ball-preview'), color, eyes, mouth, '100%')
+    renderHtmlBall(document.querySelector('#ball-preview'), color, eyes, mouth, '10rem')
 }
 
 updateBall()
@@ -68,12 +68,12 @@ const renderCreateRoomForm = () => {
     const form = document.createElement('form')
     form.className = 'create-room-form'
     form.innerHTML = `
-        <label for="room-name">Room name</label>
+        <label for="room-name">Room name:</label>
         <input type="text" id="room-name" name="name" placeholder="">
-        <label for="room-password">Password</label>
+        <label for="room-password">Password:</label>
         <input type="text" id="room-password" name="password" placeholder="Optional">
         <div class="create-room-actions">
-            <button type="submit" class="submit">Create room</button>
+            <button type="submit" class="submit">Create</button>
             <button type="button" class="cancel">Cancel</button>
         </div>
     `

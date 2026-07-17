@@ -57,16 +57,9 @@ export const AVATAR_EYES = 10
 export const AVATAR_MOUTHS = 11
 
 export const renderHtmlBall = (container, color, eyes, mouth, size = `${SPRITE_SIZE}px`) => {
-    const normalizedSize = typeof size === 'number' ? `${size}px` : size
-    const isPercentageSize = typeof normalizedSize === 'string' && normalizedSize.endsWith('%')
-    const layerSize = isPercentageSize ? '100%' : normalizedSize
-
     container.style.position = 'relative'
-    container.style.display = 'block'
-    container.style.overflow = 'hidden'
-    container.style.aspectRatio = '1 / 1'
-    container.style.width = normalizedSize
-    container.style.height = isPercentageSize ? 'auto' : normalizedSize
+    container.style.width = size
+    container.style.height = size
 
     const colorElement = document.createElement('div')
     container.appendChild(colorElement)
@@ -79,9 +72,9 @@ export const renderHtmlBall = (container, color, eyes, mouth, size = `${SPRITE_S
         element.style.position = 'absolute'
         element.style.top = '0'
         element.style.left = '0'
-        element.style.width = layerSize
-        element.style.height = layerSize
-        element.style.backgroundSize = `calc(${layerSize} * ${ATLAS_WIDTH}) calc(${layerSize} * ${ATLAS_HEIGHT})`
+        element.style.width = size
+        element.style.height = size
+        element.style.backgroundSize = `calc(${size} * ${ATLAS_WIDTH}) calc(${size} * ${ATLAS_HEIGHT})`
         element.style.imageRendering = 'crisp-edges'
         element.style.imageRendering = 'pixelated'
     })
@@ -93,17 +86,17 @@ export const renderHtmlBall = (container, color, eyes, mouth, size = `${SPRITE_S
     const colorCol = color % 4
     const colorRow = Math.floor(color / 4)
     colorElement.style.backgroundPosition =
-        `calc(-${colorCol} * ${layerSize}) calc(-${colorRow} * ${layerSize})`
+        `calc(-${colorCol} * ${size}) calc(-${colorRow} * ${size})`
 
     const eyesCol = eyes % 4
     const eyesRow = Math.floor(eyes / 4)
     eyesElement.style.backgroundPosition =
-        `calc(-${eyesCol} * ${layerSize}) calc(-${eyesRow} * ${layerSize})`
+        `calc(-${eyesCol} * ${size}) calc(-${eyesRow} * ${size})`
 
     const mouthCol = mouth % 4
     const mouthRow = Math.floor(mouth / 4)
     mouthElement.style.backgroundPosition =
-        `calc(-${mouthCol} * ${layerSize}) calc(-${mouthRow} * ${layerSize})`
+        `calc(-${mouthCol} * ${size}) calc(-${mouthRow} * ${size})`
 }
 
 const setRandomFavicon = () => {
