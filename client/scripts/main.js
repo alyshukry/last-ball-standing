@@ -49,17 +49,24 @@ export const showView = (view) => {
 
 showView('home')
 
-const SPRITE_SIZE = 64
+export const SPRITE_SIZE = 64
 const ATLAS_WIDTH = 4
 const ATLAS_HEIGHT = 8
 export const AVATAR_COLORS = 20
 export const AVATAR_EYES = 10
 export const AVATAR_MOUTHS = 11
 
-export const renderHtmlBall = (container, color, eyes, mouth, scale = 1) => {
+export const renderHtmlBall = (container, color, eyes, mouth, size = `${SPRITE_SIZE}px`) => {
+    const normalizedSize = typeof size === 'number' ? `${size}px` : size
+    const isPercentageSize = typeof normalizedSize === 'string' && normalizedSize.endsWith('%')
+    const layerSize = isPercentageSize ? '100%' : normalizedSize
+
     container.style.position = 'relative'
-    container.style.width = `${SPRITE_SIZE * scale}px`
-    container.style.height = `${SPRITE_SIZE * scale}px`
+    container.style.display = 'block'
+    container.style.overflow = 'hidden'
+    container.style.aspectRatio = '1 / 1'
+    container.style.width = normalizedSize
+    container.style.height = isPercentageSize ? 'auto' : normalizedSize
 
     const colorElement = document.createElement('div')
     container.appendChild(colorElement)
@@ -72,9 +79,9 @@ export const renderHtmlBall = (container, color, eyes, mouth, scale = 1) => {
         element.style.position = 'absolute'
         element.style.top = '0'
         element.style.left = '0'
-        element.style.width = `${SPRITE_SIZE * scale}px`
-        element.style.height = `${SPRITE_SIZE * scale}px`
-        element.style.backgroundSize = `${SPRITE_SIZE * ATLAS_WIDTH * scale}px ${SPRITE_SIZE * ATLAS_HEIGHT * scale}px`
+        element.style.width = layerSize
+        element.style.height = layerSize
+        element.style.backgroundSize = `calc(${layerSize} * ${ATLAS_WIDTH}) calc(${layerSize} * ${ATLAS_HEIGHT})`
         element.style.imageRendering = 'crisp-edges'
         element.style.imageRendering = 'pixelated'
     })
@@ -86,17 +93,17 @@ export const renderHtmlBall = (container, color, eyes, mouth, scale = 1) => {
     const colorCol = color % 4
     const colorRow = Math.floor(color / 4)
     colorElement.style.backgroundPosition =
-        `-${colorCol * SPRITE_SIZE * scale}px -${colorRow * SPRITE_SIZE * scale}px`
+        `calc(-${colorCol} * ${layerSize}) calc(-${colorRow} * ${layerSize})`
 
     const eyesCol = eyes % 4
     const eyesRow = Math.floor(eyes / 4)
     eyesElement.style.backgroundPosition =
-        `-${eyesCol * SPRITE_SIZE * scale}px -${eyesRow * SPRITE_SIZE * scale}px`
+        `calc(-${eyesCol} * ${layerSize}) calc(-${eyesRow} * ${layerSize})`
 
     const mouthCol = mouth % 4
-    const moutRow = Math.floor(mouth / 4)
+    const mouthRow = Math.floor(mouth / 4)
     mouthElement.style.backgroundPosition =
-        `-${mouthCol * SPRITE_SIZE * scale}px -${moutRow * SPRITE_SIZE * scale}px`
+        `calc(-${mouthCol} * ${layerSize}) calc(-${mouthRow} * ${layerSize})`
 }
 
 const setRandomFavicon = () => {

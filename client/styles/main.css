@@ -55,7 +55,7 @@ button {
     border-style: solid;
     background-color: #0bf2ff;
 
-    padding: 8px;
+    padding: .5rem;
 
     cursor: pointer;
 }
@@ -71,6 +71,8 @@ input {
     border-color: rgb(0, 0, 0, 1);
     border-width: 4px;
     border-style: solid;
+
+    min-width: 0;
 
     padding: 8px;
 }

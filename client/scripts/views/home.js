@@ -1,4 +1,4 @@
-import { showView, API_URL, renderHtmlBall, AVATAR_COLORS, AVATAR_EYES, AVATAR_MOUTHS, ARENAS } from '../main.js'
+import { showView, API_URL, renderHtmlBall, AVATAR_COLORS, AVATAR_EYES, AVATAR_MOUTHS, ARENAS, SPRITE_SIZE } from '../main.js'
 import { joinRoom } from '../views/rooms.js'
 
 let color = parseInt(localStorage.getItem('color')) || Math.floor(Math.random() * AVATAR_COLORS)
@@ -9,7 +9,7 @@ const updateBall = () => {
     localStorage.setItem('color', color)
     localStorage.setItem('eyes', eyes)
     localStorage.setItem('mouth', mouth)
-    renderHtmlBall(document.querySelector('#ball-preview'), color, eyes, mouth, 2.5)
+    renderHtmlBall(document.querySelector('#ball-preview'), color, eyes, mouth, '100%')
 }
 
 updateBall()
@@ -108,7 +108,7 @@ const renderCreateRoomForm = () => {
 
 joinButtons.replaceChild(renderCreateRoomButton(), createRoomButton)
 
-const createBannerBalls = (container, count, scale = 1) => {
+const createBannerBalls = (container, count, size = `${SPRITE_SIZE}px`) => {
     container.replaceChildren()
 
     const safeCount = Math.max(0, Math.floor(count))
@@ -125,8 +125,9 @@ const createBannerBalls = (container, count, scale = 1) => {
         const eyes = Math.floor(Math.random() * AVATAR_EYES)
         const mouth = Math.floor(Math.random() * AVATAR_MOUTHS)
 
-        renderHtmlBall(ball, color, eyes, mouth, scale)
+        renderHtmlBall(ball, color, eyes, mouth, size)
     }
 }
 
-createBannerBalls(document.querySelector('#banner #balls-container'), 9, .9)
+const bannerBallCount = 9
+createBannerBalls(document.querySelector('#banner #balls-container'), bannerBallCount, `${document.querySelector('#banner').getBoundingClientRect().width / (bannerBallCount * 1.5)}px`)
