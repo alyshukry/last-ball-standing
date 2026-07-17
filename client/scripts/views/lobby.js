@@ -4,23 +4,23 @@ import { ws } from '../socket.js'
 import { state } from '../state.js'
 
 let countdownInterval = null
+const countdownElement = document.querySelector('#start-game-countdown')
 
 const startGameCountdown = (duration) => {
     duration /= 1000
 
-    const countdownElement = document.querySelector('#start-game-countdown')
     if (!countdownElement) return
 
     clearInterval(countdownInterval)
 
     let remaining = Math.max(0, Math.floor(duration))
-    countdownElement.innerText = remaining.toString()
+    countdownElement.innerText = `Starting game in ${remaining.toString()} seconds...`
 
     if (remaining <= 0) return
 
     countdownInterval = setInterval(() => {
         remaining -= 1
-        countdownElement.innerText = remaining.toString()
+        countdownElement.innerText = `Starting game in ${remaining.toString()} seconds...`
 
         if (remaining <= 0) {
             clearInterval(countdownInterval)
@@ -69,6 +69,7 @@ on('player_info', () => renderPlayers())
 on('player_left', () => renderPlayers())
 
 on('back_to_lobby', () => {
+    countdownElement.innerText = 'Waiting for owner to start...'
     showView('lobby')
     renderPlayers()
 })
