@@ -122,11 +122,16 @@ const createBannerBalls = (container, count, size = `${SPRITE_SIZE}px`) => {
         const color = safeCount <= 1
             ? 0
             : Math.round(index * (colorCount - 1) / (safeCount - 1))
-        const eyes = Math.floor(Math.random() * AVATAR_EYES)
-        const mouth = Math.floor(Math.random() * AVATAR_MOUTHS)
-
-        renderHtmlBall(ball, color, eyes, mouth, size)
+        renderRandomBall(ball, color, size)
+        ball.onclick = () => { renderRandomBall(ball, color, size) }
     }
+}
+
+const renderRandomBall = (ball, color, size) => {
+    const eyes = Math.floor(Math.random() * AVATAR_EYES)
+    const mouth = Math.floor(Math.random() * AVATAR_MOUTHS)
+
+    renderHtmlBall(ball, color, eyes, mouth, size)
 }
 
 const bannerBallCount = 9

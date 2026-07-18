@@ -22,6 +22,15 @@
     width: 90%;
 }
 
+#balls-container .ball {
+    transition: transform .05s ease;
+}
+
+#balls-container .ball:hover {
+    transform: scale(1.125);
+    cursor: pointer;
+}
+
 #setup-panel {
     display: flex;
     align-items: center;
