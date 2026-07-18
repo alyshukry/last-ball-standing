@@ -163,9 +163,9 @@ const playerWins = document.querySelector('#player-wins')
 on('round_end', (data) => {
     const winner = state.playersInfo[data.winner]
 
-    renderHtmlBall(winnerAvatar, winner?.color, winner?.eyes, winner?.mouth, 3)
+    renderHtmlBall(winnerAvatar, winner?.color, winner?.eyes, winner?.mouth, '8rem')
 
-    winText.textContent = state.playersInfo[data.winner]?.username + ' wins'
+    winText.textContent = state.playersInfo[data.winner]?.username + ' wins!'
     winScreen.classList.remove('hidden')
 
     const winEntries = Array.isArray(data.wins) ? data.wins : Object.entries(data.wins ?? {})
@@ -179,7 +179,7 @@ on('round_end', (data) => {
         playerElement.appendChild(playerWinCount)
 
         const player = state.playersInfo[id]
-        renderHtmlBall(playerBallElement, player?.color, player?.eyes, player?.mouth, 1)
+        renderHtmlBall(playerBallElement, player?.color, player?.eyes, player?.mouth, '4rem')
         playerWinCount.innerText = wins
     }
 })
