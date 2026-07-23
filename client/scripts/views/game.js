@@ -163,9 +163,9 @@ const playerWins = document.querySelector('#player-wins')
 on('round_end', (data) => {
     const winner = state.playersInfo[data.winner]
 
-    renderHtmlBall(winnerAvatar, winner?.color, winner?.eyes, winner?.mouth, '8rem')
+    renderHtmlBall(winnerAvatar, winner?.color || 17, winner?.eyes || 8, winner?.mouth || 3, '8rem')
 
-    winText.textContent = state.playersInfo[data.winner]?.username + ' wins!'
+    winText.textContent = winner ? winner.username + ' wins!' : 'No one wins.'
     winScreen.classList.remove('hidden')
 
     const winEntries = Array.isArray(data.wins) ? data.wins : Object.entries(data.wins ?? {})
