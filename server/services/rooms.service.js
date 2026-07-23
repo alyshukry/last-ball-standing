@@ -173,6 +173,7 @@ export const startGame = (roomId, ownerId) => {
 
     if (!room) throw new AppError('Room not found', 'room_not_found')
     if (ownerId !== room.owner) throw new AppError('User is not room owner', 'not_owner')
+    if (room.timeouts.start) throw new AppError('Game is already starting', 'game_already_starting')
 
     const countdown = 5000
 
