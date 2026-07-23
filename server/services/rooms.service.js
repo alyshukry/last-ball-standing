@@ -142,6 +142,8 @@ export const kickPlayerFromRoom = (roomId, playerId, ownerId) => {
 
     if (!room) throw new AppError('Room not found', 'room_not_found')
     if (!room.players.get(playerId)) throw new AppError('Player does not exist', 'player_not_found')
+    if (playerId === ownerId) throw new AppError('Cannot kick self', 'invalid_kick')
+    if (ownerId !== room.owner) throw new AppError('Wrong room owner ID', 'no_permission')
 
     for (const client of getSocketServer().clients)
         if (client.id === playerId) {
