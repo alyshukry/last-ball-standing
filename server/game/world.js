@@ -32,8 +32,7 @@ export const setUpRoom = (room) => {
 export const buildArena = (room, index) => {
     broadcastToRoom(room.id, {
         type: 'arena',
-        bodies: room.arenas[room.round.number % room.arenas.length].bodies,
-        spawns: room.arenas[room.round.number % room.arenas.length].spawns
+        bodies: room.arenas[room.round.number % room.arenas.length].bodies
     })
 
     World.remove(room.physics.engine.world, room.physics.engine.world.bodies.filter(b => b.isStatic)) // clear world

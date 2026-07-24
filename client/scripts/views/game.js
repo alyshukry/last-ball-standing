@@ -99,13 +99,6 @@ function render() {
 
     for (const body of state.arena) renderBody(body)
 
-    for (const spawn of state.spawns) {
-        ctx.fillStyle = 'red'
-        ctx.beginPath()
-        ctx.arc(spawn.x, spawn.y, 4, 0, Math.PI * 2)
-        ctx.fill()
-    }
-
     for (const [id, player] of Object.entries(state.currentState.players || {})) {
         const prev = state.prevState.players?.[id]
         const x = prev ? prev.x + (player.x - prev.x) * t : player.x
