@@ -6,6 +6,7 @@ export const state = {
     playersInfo: {},
     lastUpdate: Date.now(),
     arena: [],
+    spawns: [],
     myId: null,
     isOwner: false,
     worldDimensions: { width: 1000, height: 500 }
@@ -18,7 +19,7 @@ on('state', (data) => {
 })
 on('player_info', (data) => { state.playersInfo[data.id] = { id: data.id, color: data.color, eyes: data.eyes, mouth: data.mouth, username: data.username } })
 on('player_left', (data) => { delete state.playersInfo[data.id] })
-on('arena', (data) => { state.arena = data.bodies })
+on('arena', (data) => { state.arena = data.bodies; state.spawns = data.spawns })
 on('joined', (data) => {
     state.myId = data.id
     state.worldDimensions = data.world_dimensions

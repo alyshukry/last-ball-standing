@@ -32,7 +32,8 @@ export const setUpRoom = (room) => {
 export const buildArena = (room, index) => {
     broadcastToRoom(room.id, {
         type: 'arena',
-        bodies: room.arenas[room.round.number % room.arenas.length].bodies
+        bodies: room.arenas[room.round.number % room.arenas.length].bodies,
+        spawns: room.arenas[room.round.number % room.arenas.length].spawns
     })
 
     World.remove(room.physics.engine.world, room.physics.engine.world.bodies.filter(b => b.isStatic)) // clear world
@@ -93,9 +94,47 @@ export const killPlayer = (room, id) => {
 export const revivePlayer = (room, id, playerIndex) => {
     const player = room.players.get(id)
     const arena = room.arenas[room.round.number % room.arenas.length]
-    const start = Math.floor(Math.random() * arena.spawns.length)
-    const spawn = arena.spawns[(playerIndex + start) % arena.spawns.length]
-    const offset = Math.floor(playerIndex / arena.spawns.length) * 60
+    const spawns = arena.spawns
+
+    const start = Math.floor(Math.random() * spawns.length)
+    const spawnThreshold = BALL_RADIUS * 2
+    const occupiedCounts = new Array(spawns.length).fill(0)
+
+    for (const p of room.players.values()) {
+        const pos = p.ball.position
+        let closestIndex = 0
+        let closestDist = Number.POSITIVE_INFINITY
+
+        for (let i = 0; i < spawns.length; i++) {
+            const dx = pos.x - spawns[i].x
+            const dy = pos.y - spawns[i].y
+            const dist = dx * dx + dy * dy
+            if (dist < closestDist) {
+                closestDist = dist
+                closestIndex = i
+            }
+        }
+
+        if (closestDist <= spawnThreshold * spawnThreshold) {
+            occupiedCounts[closestIndex] += 1
+        }
+    }
+
+    let spawnIndex = -1
+    for (let i = 0; i < spawns.length; i++) {
+        const index = (start + i) % spawns.length
+        if (occupiedCounts[index] === 0) {
+            spawnIndex = index
+            break
+        }
+    }
+
+    if (spawnIndex === -1) {
+        spawnIndex = (playerIndex + start) % spawns.length
+    }
+
+    const spawn = spawns[spawnIndex]
+    const offset = occupiedCounts[spawnIndex] * BALL_RADIUS * 2
 
     Body.setVelocity(player.ball, { x: 0, y: 0 })
     Body.setPosition(player.ball, { x: spawn.x, y: spawn.y - offset })
