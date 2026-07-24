@@ -15,6 +15,8 @@ export const handleJoin = (ws, data) => {
         if (!isOwner) send(ws, { type: 'ownership_error', error: 'Incorrect room token' })
     }
 
+    if (!data.username) data.username = ['Red ', 'Orange ', 'Yellow ', 'Green ', 'Blue ', 'Purple ', 'Pink '][Math.floor(Math.random() * 7)] + ['Cat', 'Dog', 'Dolphin', 'Frog', 'Parrot', 'Hawk', 'Snake', 'Flamingo', 'Elephant', 'Giraffe'][Math.floor(Math.random() * 10)]
+
     const playerJoin = addPlayerToRoom(ws.room, ws.id, data.password || null, data.color, data.eyes, data.mouth, data.username)
 
     if (playerJoin === 'ok') {

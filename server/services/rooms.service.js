@@ -10,13 +10,14 @@ import { AppError } from '../utils/errors.js'
 const { Engine, Events } = Matter
 
 const rooms = new Map()
+const randomRoomName = ['Red ', 'Orange ', 'Yellow ', 'Green ', 'Blue ', 'Purple ', 'Pink '][Math.floor(Math.random() * 7)] + ['Cat', 'Dog', 'Dolphin', 'Frog', 'Parrot', 'Hawk', 'Snake', 'Flamingo', 'Elephant', 'Giraffe'][Math.floor(Math.random() * 10)] + '\'s Room'
 
 export const createRoom = ({ name, password, arenas }) => {
     const token = randomUUID() // creator sends to server to verify room ownership on ws connection
 
     const room = {
         id: randomUUID(),
-        name,
+        name: name || randomRoomName,
         password: password || null,
         owner: null, // wait for token
         token,

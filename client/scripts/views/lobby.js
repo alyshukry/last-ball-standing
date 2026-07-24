@@ -38,7 +38,7 @@ const renderPlayers = () => {
         const ball = document.createElement('div')
         renderHtmlBall(ball, info.color, info.eyes, info.mouth, '5rem')
 
-        li.textContent = info.username || 'guest'
+        li.textContent = info.username
         li.dataset.userId = id
         li.appendChild(ball)
         playerList.appendChild(li)
