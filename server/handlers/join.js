@@ -1,11 +1,12 @@
 import { WORLD_HEIGHT, WORLD_WIDTH } from '../game/constants.js'
+import { incrementPlayerCount } from '../services/stats.service.js'
 import { addPlayerToRoom, getFullRoom, verifyOwnerToken } from '../services/rooms.service.js'
 import { getSocketServer } from '../socket.js'
 import { AppError } from '../utils/errors.js'
 import { send } from '../utils/socket.js'
 import { randomUUID } from 'crypto'
 
-export const handleJoin = (ws, data) => {
+export const handleJoin = async (ws, data) => {
     ws.id = randomUUID()
     ws.room = data.room
 
@@ -30,5 +31,7 @@ export const handleJoin = (ws, data) => {
                 const player = getFullRoom(ws.room).players.get(client.id)
                 send(ws, { type: 'player_info', id: client.id, color: player.color, eyes: player.eyes, mouth: player.mouth, username: player.username })
             }
+
+        await incrementPlayerCount()
     }
 }
