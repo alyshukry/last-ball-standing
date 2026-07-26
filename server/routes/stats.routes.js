@@ -1,8 +1,8 @@
 import { Router } from 'express'
-import { getPlayerCount } from '../services/stats.service.js'
+import { handleGetPlayerCount } from '../controllers/stats.controller.js'
 
 const router = Router()
 
-router.get('/', getPlayerCount)
+router.get('/', handleGetPlayerCount)
 
 export default router
