@@ -1,8 +1,6 @@
-import { Router } from 'express'
-import { handleGetPlayerCount } from '../controllers/stats.controller.js'
+import Redis from 'ioredis'
 
-const router = Router()
+const redis = new Redis(process.env.REDIS_URL)
 
-router.get('/', handleGetPlayerCount)
-
-export default router
+export const incrementPlayerCount = async () => await redis.incr('totalPlayers')
+export const getPlayerCount = async () => await redis.get('totalPlayers')
