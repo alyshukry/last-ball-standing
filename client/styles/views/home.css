@@ -132,3 +132,7 @@ button#random {
 .create-room-form button.cancel {
     background-color: lightgray;
 }
+
+footer {
+    color: white;
+}
