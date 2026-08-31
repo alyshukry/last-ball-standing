@@ -109,12 +109,15 @@ function render() {
         // triangle indicator for own ball
         if (id === state.myId) {
             ctx.beginPath()
-            ctx.moveTo(x, y - 35)
-            ctx.lineTo(x - 6, y - 45)
-            ctx.lineTo(x + 6, y - 45)
+            ctx.moveTo(x, y - 40)
+            ctx.lineTo(x - 9, y - 55)
+            ctx.lineTo(x + 9, y - 55)
             ctx.closePath()
             ctx.fillStyle = 'white'
             ctx.fill()
+            ctx.strokeStyle = 'black'
+            ctx.lineWidth = 3
+            ctx.stroke()
         }
 
         drawSprite('colors', info.color ?? 0, x, y)
