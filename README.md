@@ -1,6 +1,6 @@
 <p align="center">
     <picture>
-        <img alt="last ball standing banner" src="client/assets/banner.gif" width="100%">
+        <img alt="last ball standing banner" src=".github/assets/banner.gif" width="100%">
     </picture>
 </p>
 <h3 align="center" style="font-family: monospace;">
